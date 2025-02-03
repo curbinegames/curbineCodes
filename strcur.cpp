@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <tchar.h>
 #include <string.h>
 #include "strcur.h"
 #include "sancur.h"
