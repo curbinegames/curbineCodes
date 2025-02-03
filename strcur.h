@@ -1,18 +1,37 @@
+/**
+ * @file strcur.h
+ * @brief 文字列操作で便利なものを集めたコード
+ * @author curbine
+ * @date 2024/7/19
+ * @note 個人が趣味で製作したものなので、品質は保証しません。このコードを使用したことによるトラブルの責任は負いかねます。
+ */
+
 #pragma once
 
+#include <string.h>
 #include <tchar.h>
 
 #ifdef UNICODE
-#define _T(s) L##s
-#define _TEXT(s) L##s
 #define _VSPRINTF_S vswprintf_s
 #define _STRCPY_S wcscpy_s
+
 #else
-#define _T(s) s
-#define _TEXT(s) s
 #define _VSPRINTF_S vsprintf_s
 #define _STRCPY_S strcpy_s
+
 #endif
+
+/**
+ * don't use
+ * バッファオーバーランを起こす可能性がある為、このマクロはもう使っちゃダメ、代わりにstrcopy_2を使ってください
+ * p1をp2にコピーする。cは使用しない
+ */
+#define strcopy(p1, p2, c) _STRCPY_S(p2, 255, p1)
+
+/**
+ * p1をp2にコピーする
+ */
+#define strcopy_2(p1, p2, size) _STRCPY_S(p2, size, p1)
 
 /* TODO: これもrecにあるべき */
 typedef enum {
@@ -20,10 +39,14 @@ typedef enum {
 	FILETYPE_RRS,
 } TXT_OR_RRS;
 
-extern int strands(const TCHAR *p1, const TCHAR *p2); /* don't use */
+/**
+ * don't use
+ * バッファオーバーランを起こす可能性がある為、このマクロはもう使っちゃダメ、代わりにstrands_2を使ってください
+ * p1の先頭にp2があるかどうかを調べる
+ */
+#define strands(p1, p2) strands_2(p1, 50, p2, 50)
+
 extern int strands_2(const TCHAR *p1, size_t p1size, const TCHAR *p2, size_t p2size);
-extern void strcopy(const TCHAR *p1, TCHAR *p2, int c); /* don't use */
-extern void strcopy_2(const TCHAR *p1, TCHAR *p2, size_t size);
 extern void strmods(TCHAR *p1, int a); /* don't use */
 extern void strmods_2(TCHAR *p1, size_t size, int a);
 extern void strcats(TCHAR *p1, const TCHAR *p2); /* don't use */

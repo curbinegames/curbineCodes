@@ -13,59 +13,19 @@
 #include "sancur.h"
 
 /**
- * バッファオーバーランを起こす可能性がある為、この関数はもう使っちゃダメ、代わりにstrands_2を使ってください
- * @param[in] p1 探す場所
- * @param[in] p2 探す文字列
- * @return int あったら1、なかったら0
- * @sa strands_2
- * @details p1の先頭にp2があるかどうかを調べる
- */
-int strands(const TCHAR *p1, const TCHAR *p2) {
-	for (int i = 0; i < 50; i++) {
-		if (p2[i] == _T('\0')) { break; }
-		if (p1[i] != p2[i]) { return 0; }
-	}
-	return 1;
-}
-
-/**
  * p1の先頭にp2があるかどうかを調べる
  * @param[in] p1 探す場所
  * @param[in] p1size p1の長さ、配列数で指定
  * @param[in] p2 探す文字列
  * @param[in] p2size p2の長さ、配列数で指定
- * @return int あったら1、なかったら0
+ * @return int あったらtrue、なかったらfalse
  */
 int strands_2(const TCHAR *p1, size_t p1size, const TCHAR *p2, size_t p2size) {
 	for (int i = 0; i < p1size && i < p2size; i++) {
 		if (p2[i] == _T('\0')) { break; }
-		if (p1[i] != p2[i]) { return 0; }
+		if (p1[i] != p2[i]) { return false; }
 	}
-	return 1;
-}
-
-/**
- * バッファオーバーランを起こす可能性がある為、この関数はもう使っちゃダメ、代わりにstrcopy_2を使ってください
- * @param[in] p1 コピーするもの
- * @param[in] p2 コピー先
- * @param[in] c 初期化フラグ
- * @sa strcopy_2
- * @details p1をp2にコピーする。cに1を入れると255桁まで初期化する(初期化推奨)
- */
-void strcopy(const TCHAR *p1, TCHAR *p2, int c) {
-	_STRCPY_S(p2, 255, p1);
-	return;
-}
-
-/**
- * p1をp2にコピーする
- * @param[in] p1 コピーするもの
- * @param[in] p2 コピー先
- * @param[in] size p2の長さ、配列数で指定
- */
-void strcopy_2(const TCHAR *p1, TCHAR *p2, size_t size) {
-	_STRCPY_S(p2, size, p1);
-	return;
+	return true;
 }
 
 /**
