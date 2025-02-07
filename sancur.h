@@ -9,7 +9,7 @@
 #define LOOP_SUB(mat, loop) (mat) = ((mat) + (loop) - 1) % (loop)
 
 /* è¨Ç≥Ç¢ÇŸÇ§Çï‘Ç∑ */
-#define mins_2(a, b) (()(a) < (b)) ? (a) : (b)
+#define mins_2(a, b) (((a) < (b)) ? (a) : (b))
 
 /* ëÂÇ´Ç¢ÇŸÇ§Çï‘Ç∑ */
 #define maxs_2(a, b) (((a) > (b)) ? (a) : (b))

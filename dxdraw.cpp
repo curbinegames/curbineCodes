@@ -127,7 +127,7 @@ void DrawGraphAnchor(int x, int y, int pic, dxdraw_anchor_t anchor) {
 	GetGraphSize(pic, &sizeX, &sizeY);
 
 	drawX = TransDrawX(x, sizeX, anchor);
-	drawY = TransDrawX(y, sizeY, anchor);
+	drawY = TransDrawY(y, sizeY, anchor);
 
 	DrawGraph(drawX, drawY, pic, TRUE);
 
@@ -161,7 +161,7 @@ void DrawZoomGraphAnchor(int x, int y, intx100_t size, int pic, dxdraw_anchor_t 
 	sizeY = sizeY * size / 100;
 
 	drawLeft = TransDrawX(x, sizeX, anchor);
-	drawUp   = TransDrawX(y, sizeY, anchor);
+	drawUp   = TransDrawY(y, sizeY, anchor);
 
 	drawRight = x + sizeX;
 	drawDown  = y + sizeY;
@@ -181,7 +181,7 @@ void DrawRotaGraphAnchor(int x, int y, double size, double rot, DxPic_t pic, dxd
 	}
 
 	drawX = TransDrawX(x, 0, anchor);
-	drawY = TransDrawX(y, 0, anchor);
+	drawY = TransDrawY(y, 0, anchor);
 
 	DrawRotaGraph(drawX, drawY, size, rot, pic, TransFlag, ReverseXFlag, ReverseYFlag);
 	return;
@@ -197,7 +197,7 @@ void DrawStringAnchor(int x, int y, const TCHAR *s, DxColor_t cr, dxdraw_anchor_
 	}
 
 	drawX = TransDrawX(x, 0, anchor);
-	drawY = TransDrawX(y, 0, anchor);
+	drawY = TransDrawY(y, 0, anchor);
 
 	DrawString(drawX, drawY, s, cr);
 	return;
@@ -213,7 +213,7 @@ void DrawStringToHandleAnchor(int x, int y, const TCHAR *s, DxColor_t cr, int ha
 	}
 
 	drawX = TransDrawX(x, 0, anchor);
-	drawY = TransDrawX(y, 0, anchor);
+	drawY = TransDrawY(y, 0, anchor);
 
 	DrawStringToHandle(drawX, drawY, s, cr, handle);
 	return;
@@ -235,7 +235,7 @@ void DrawFormatStringAnchor(int x, int y, DxColor_t cr, dxdraw_anchor_t anchor, 
 	}
 
 	drawX = TransDrawX(x, 0, anchor);
-	drawY = TransDrawX(y, 0, anchor);
+	drawY = TransDrawY(y, 0, anchor);
 
 	DrawString(drawX, drawY, buf, cr);
 
@@ -259,7 +259,7 @@ void DrawFormatStringToHandleAnchor(int x, int y, DxColor_t cr, int handle, dxdr
 	}
 
 	drawX = TransDrawX(x, 0, anchor);
-	drawY = TransDrawX(y, 0, anchor);
+	drawY = TransDrawY(y, 0, anchor);
 
 	DrawStringToHandle(drawX, drawY, buf, cr, handle);
 
