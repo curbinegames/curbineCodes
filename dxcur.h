@@ -6,12 +6,15 @@
 #undef PlaySound
 
 #define COLOR_WHITE GetColor(255, 255, 255)
-#define COLOR_BLACK GetColor(0, 0, 0)
-#define COLOR_RED GetColor(255, 0, 0)
-#define COLOR_GREEN GetColor(0, 255, 0)
-#define COLOR_BLUE GetColor(0, 0, 255)
+#define COLOR_BLACK GetColor(  0,   0,   0)
+#define COLOR_RED   GetColor(255,   0,   0)
+#define COLOR_GREEN GetColor(  0, 191,   0) /* (0,255,0)だと明るすぎる */
+#define COLOR_BLUE  GetColor(  0,   0, 255)
 
 #define DXLIB_PIC_HAND_DEFAULT -1
+#define DXLIB_SND_HAND_DEFAULT -1
+#define DXLIB_PIC_NULL -1
+#define DXLIB_SND_NULL -1
 
 typedef unsigned int DxColor_t; /* DXライブラリの色情報であることを示す型。unsigned int型 */
 typedef int DxPic_t; /* DXライブラリのグラフィックのハンドルであることを示す型。int型 */

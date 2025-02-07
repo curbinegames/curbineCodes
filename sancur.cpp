@@ -9,108 +9,6 @@
 #include "sancur.h"
 
 /**
- * 小さいほうを返す
- * @param[in] a 入力1
- * @param[in] b 入力2
- * @return int 小さいほうの数値
- */
-int mins_2(int a, int b) {
-	if (a > b) { return b; }
-	return a;
-}
-
-/**
- * 本来のmax関数と用途が逆の為、この関数はもう使っちゃダメ、代わりにmins_2を使ってください
- * @param[in] a 入力1
- * @param[in] b 入力2
- * @return int 小さいほうの数値
- * @details 小さいほうを返す
- */
-int maxs(int a, int b) {
-	return mins_2(a, b);
-}
-
-/**
- * 大きいほうを返す
- * @param[in] a 入力1
- * @param[in] b 入力2
- * @return int 大きいほうの数値
- */
-int maxs_2(int a, int b) {
-	if (a < b) { return b; }
-	return a;
-}
-
-/**
- * 本来のmin関数と用途が逆の為、この関数はもう使っちゃダメ、代わりにmaxs_2を使ってください
- * @param[in] a 入力1
- * @param[in] b 入力2
- * @return int 大きいほうの数値
- * @details 大きいほうを返す
- */
-int mins(int a, int b) {
-	return maxs_2(a, b);
-}
-
-/**
- * aをbまで引き上げたものを返す
- * @param[in] a 入力1
- * @param[in] b 入力2
- * @return double 大きいほうの数値
- */
-double mins_D(double a, double b) {
-	if (a < b) { a = b; }
-	return a;
-}
-
-/**
- * aをbまで引き下げたものを返す
- * @param[in] a 入力1
- * @param[in] b 入力2
- * @return double 小さいほうの数値
- */
-double maxs_D(double a, double b) {
-	if (a > b) { a = b; }
-	return a;
-}
-
-/**
- * bをaまで引き上げ、cまで引き下げたものを返す
- * @param[in] a 下限
- * @param[in] b 検査する数値
- * @param[in] c 上限
- * @return int aで引き上げ、cで引き下げたb
- */
-int betweens(int a, int b, int c) {
-	if (a > b) { return a; }
-	if (b > c) { return c; }
-	return b;
-}
-
-/**
- * bをaまで引き上げ、cまで引き下げたものを返す
- * @param[in] a 下限
- * @param[in] b 検査する数値
- * @param[in] c 上限
- * @return double aで引き上げ、cで引き下げたb
- */
-double betweens_D(double a, double b, double c) {
-	if (a > b) { return a; }
-	if (b > c) { return c; }
-	return b;
-}
-
-/**
- * aが0だったら1にする
- * @param[in] a 検査する数値
- * @return int aが0だったら1, それ以外ならa
- */
-int notzero(int a) {
-	if (a == 0) { a = 1; }
-	return a;
-}
-
-/**
  * 点1(x1,y1)、点2(x2,y2)、を通る直線を考えて、xの時の値を返す。
  * @param[in] x1 点1のx座標
  * @param[in] y1 点1のy座標
@@ -171,17 +69,17 @@ double movecal(int mode, double startx, double starty, double endx, double endy,
  * @return double ルート(c)
  */
 double sanrute(double c) {
-	short int d = 10;
-	double a = 0, b = 1;
+	double a = 0;
+	double b = 1;
+
 	while (b * b < c) { b *= 10; }
 	if (b * b == c) { return b; }
 	b /= 10;
-	while (b >= 100000 || d == -10) {
+	for (uint i = 0; i < 10; i++) {
 		while (a * a < c) { a += b; }
 		if (a * a == c) { return a; }
 		a -= b;
-		b /= d;
-		if (b == 1) { d *= -1; }
+		b /= 10;
 	}
 	return a;
 }
@@ -241,16 +139,6 @@ double sinC(int a) {
 	if (180 <= a && a <= 270) { return -sin[a - 180]; }
 	if (271 <= a && a <= 359) { return -sin[-(a - 360)]; }
 	return sin[a];
-}
-
-/**
- * cos"a"を出力する
- * @param[in] a 入力
- * @return double cos(a)
- */
-double cosC(int a) {
-	a += 90;
-	return sinC(a);
 }
 
 /**
