@@ -43,5 +43,5 @@ extern void rot_xy_pos(int rot, int *x, int *y);
 #define mins_D(a, b) maxs_2(a, b)
 #define maxs_D(a, b) mins_2(a, b)
 #define betweens_D(a, b, c) betweens(a, b, c)
-#define notzero(a) ((a) == 0) ? 1 : (a)
+#define notzero(a) (((a) == 0) ? 1 : (a))
 extern int NumLoop(int a, int b);
