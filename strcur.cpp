@@ -471,7 +471,7 @@ int strrans(const TCHAR *p1) {
 	strmods(buf, 2);
 	a = strsans(buf);
 	strnex_EX(buf, _T(','));
-	b = mins(strsans(buf), a);
+	b = maxs_2(strsans(buf), a);
 	return GetRand(b - a) + a;
 }
 
