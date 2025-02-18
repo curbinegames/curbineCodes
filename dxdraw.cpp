@@ -227,7 +227,7 @@ void DrawFormatStringAnchor(int x, int y, DxColor_t cr, dxdraw_anchor_t anchor, 
 	int drawY = 0;
 	TCHAR buf[256];
 
-	_VSPRINTF_S(buf, s, as);
+	_vstprintf_s(buf, s, as);
 
 	if (anchor == DXDRAW_ANCHOR_TOP_LEFT) {
 		DrawString(x, y, buf, cr);
@@ -251,7 +251,7 @@ void DrawFormatStringToHandleAnchor(int x, int y, DxColor_t cr, int handle, dxdr
 	int drawY = 0;
 	TCHAR buf[256];
 
-	_VSPRINTF_S(buf, s, as);
+	_vstprintf_s(buf, s, as);
 
 	if (anchor == DXDRAW_ANCHOR_TOP_LEFT) {
 		DrawStringToHandle(x, y, buf, cr, handle);
