@@ -17,6 +17,9 @@
 /* b‚ğa‚Ü‚Åˆø‚«ã‚°Ac‚Ü‚Åˆø‚«‰º‚°‚½‚à‚Ì‚ğ•Ô‚· */
 #define betweens(a, b, c) mins_2(maxs_2((a), (b)), (c))
 
+/* b‚ªaˆÈãcˆÈ‰º‚Å‚ ‚ê‚ÎTRUE‚ğ•Ô‚· */
+#define IS_BETWEEN(a, b, c) ((a) <= (b) && (b) <= (c))
+
 /* cos"a"‚ğo—Í‚·‚é */
 #define cosC(a) sinC((a) + 90)
 
