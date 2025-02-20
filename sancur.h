@@ -20,6 +20,23 @@
 /* cos"a"を出力する */
 #define cosC(a) sinC((a) + 90)
 
+/* bがa以上c以下ならtrueを返す */
+#define IS_BETWEEN(a, b, c) ((a) <= (b) && (b) <= (c))
+
+/* bがa超えc未満ならtrueを返す */
+#define IS_BETWEEN_LESS(a, b, c) ((a) < (b) && (b) < (c))
+
+/* bがa超えc以下ならtrueを返す */
+#define IS_BETWEEN_LEFT_LESS(a, b, c) ((a) < (b) && (b) <= (c))
+
+/* bがa以上c未満ならtrueを返す */
+#define IS_BETWEEN_RIGHT_LESS(a, b, c) ((a) <= (b) && (b) < (c))
+
+/* ↑命名の意図、"="がない(LESSしている)からIS_BETWEEN_"LESS" */
+
+/* 配列数を返す */
+#define ARRAY_COUNT(a) (sizeof(a) / sizeof(a[0]))
+
 typedef unsigned int uint;
 typedef int intx100_t; /** 100倍していることを示すint型 */
 
@@ -36,6 +53,7 @@ extern double sanrute(double c);
 extern int abss(int a, int b);
 extern double sinC(int a);
 extern void rot_xy_pos(int rot, int *x, int *y);
+extern uint GetColorFromHSV(int hue, int saturation, int value);
 
 /* 使用してはいけない関数。過去に使っていたことがあるので、互換のために残す */
 #define maxs(a, b) (mins_2((a), (b)))

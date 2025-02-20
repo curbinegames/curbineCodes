@@ -153,3 +153,60 @@ void rot_xy_pos(int rot, int *x, int *y) {
 	*y = G * sinC(rot) + *y * cosC(rot);
 	return;
 }
+
+/**
+* HSVから色を取得する
+* @param[in] hue 色相 0~360
+* @param[in] saturation 彩度 0~100
+* @param[in] value 明度 0~100
+* @return DxColor_t RGB情報
+*/
+uint GetColorFromHSV(int hue, int saturation, int value) {
+	int r = 0;
+	int g = 0;
+	int b = 0;
+
+	saturation = betweens(0, saturation, 100);
+	value = betweens(0, value, 100);
+	hue = hue % 360;
+
+	const int scaleHigh = lins(  0, 0, 100,       255, value);
+	const int scaleLow  = lins(100, 0,   0, scaleHigh, saturation);
+
+	if (IS_BETWEEN(0, hue, 60)) {
+		r = 0xff;
+		g = lins(0, 0x00, 60, 0xff, hue);
+		b = 0x00;
+	}
+	else if (IS_BETWEEN(60, hue, 120)) {
+		r = lins(60, 0xff, 120, 0x00, hue);
+		g = 0xff;
+		b = 0x00;
+	}
+	else if (IS_BETWEEN(120, hue, 180)) {
+		r = 0x00;
+		g = 0xff;
+		b = lins(120, 0x00, 180, 0xff, hue);
+	}
+	else if (IS_BETWEEN(180, hue, 240)) {
+		r = 0x00;
+		g = lins(180, 0xff, 240, 0x00, hue);
+		b = 0xff;
+	}
+	else if (IS_BETWEEN(240, hue, 300)) {
+		r = lins(240, 0x00, 300, 0xff, hue);
+		g = 0x00;
+		b = 0xff;
+	}
+	else if (IS_BETWEEN(300, hue, 360)) {
+		r = 0xff;
+		g = 0x00;
+		b = lins(300, 0xff, 360, 0x00, hue);
+	}
+
+	r = lins(0, scaleLow, 255, scaleHigh, r);
+	g = lins(0, scaleLow, 255, scaleHigh, g);
+	b = lins(0, scaleLow, 255, scaleHigh, b);
+
+	return (r << 16) + (g << 8) + (b);
+}
