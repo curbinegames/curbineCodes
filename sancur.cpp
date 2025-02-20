@@ -208,5 +208,41 @@ uint GetColorFromHSV(int hue, int saturation, int value) {
 	g = lins(0, scaleLow, 255, scaleHigh, g);
 	b = lins(0, scaleLow, 255, scaleHigh, b);
 
-	return (r << 16) + (g << 8) + (b);
+	return GetColor(r, g, b);
+}
+
+/**
+* curbineが個人的に綺麗だと思う虹色を出力する
+* @param[in] hueParam 色相パラメータ 0~255 デジタルでよく言う色相とは違う、0で赤、32でオレンジ、64で黄色、96で緑、112で水色、176で青、240で紫
+* @param[in] saturation 彩度 0~100
+* @param[in] value 明度 0~100
+* @return DxColor_t RGB情報
+*/
+uint GetColorCurRainbow(int hueParam, int saturation, int value) {
+	static const int table[17] = { 0, 20, 35, 48, 60, 84, 120, 180, 189, 200, 217, 240, 260, 276, 287, 300, 360 };
+	int h = 0;
+	int s = 100;
+	int v = 100;
+
+	hueParam = hueParam % 256;
+
+	for (uint iSect = 0; iSect < 16; iSect++) {
+		if (IS_BETWEEN(16 * iSect, hueParam, 16 * iSect + 16)) {
+			h = lins(16 * iSect, table[iSect], 16 * iSect + 16, table[iSect + 1], hueParam);
+			break;
+		}
+	}
+
+	if (IS_BETWEEN(60, h, 120)) {
+		int max_value = lins(60, 100, 120,  75, h);
+		v = lins(0, 0, 100, max_value, value);
+	}
+	else if (IS_BETWEEN(120, h, 180)) {
+		int max_value = lins(120, 75, 180, 100, h);
+		v = lins(0, 0, 100, max_value, value);
+	}
+
+	s = saturation;
+
+	return GetColorFromHSV(h, s, v);
 }

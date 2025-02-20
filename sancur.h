@@ -57,6 +57,7 @@ extern int abss(int a, int b);
 extern double sinC(int a);
 extern void rot_xy_pos(int rot, int *x, int *y);
 extern uint GetColorFromHSV(int hue, int saturation, int value);
+extern uint GetColorCurRainbow(int hueParam, int saturation, int value);
 
 /* 使用してはいけない関数。過去に使っていたことがあるので、互換のために残す */
 #define maxs(a, b) (mins_2((a), (b)))
