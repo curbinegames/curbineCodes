@@ -32,7 +32,8 @@ public:
 	dxcur_snd_c();
 	~dxcur_snd_c();
 	void SetSound(const TCHAR *path);
-	void PlaySound();
+	void SetVolume(int val);
+	void PlaySound(void);
 };
 
 extern int GetMouseKeyCur(int* key, int* posX, int* posY, int* PR);

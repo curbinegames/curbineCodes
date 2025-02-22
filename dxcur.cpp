@@ -19,7 +19,11 @@ void dxcur_snd_c::SetSound(const TCHAR *path) {
 	this->mat = LoadSoundMem(path);
 }
 
-void dxcur_snd_c::PlaySound() {
+void dxcur_snd_c::SetVolume(int val) {
+	ChangeVolumeSoundMem(val, this->mat);
+}
+
+void dxcur_snd_c::PlaySound(void) {
 	DxTime_t Ntime = GetNowCount();
 	if ((this->Btime + this->Gtime) < Ntime) {
 		PlaySoundMem(this->mat, DX_PLAYTYPE_BACK);
