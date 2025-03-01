@@ -213,13 +213,14 @@ uint GetColorFromHSV(int hue, int saturation, int value) {
 
 /**
 * curbineが個人的に綺麗だと思う虹色を出力する
-* @param[in] hueParam 色相パラメータ 0~255 デジタルでよく言う色相とは違う、0で赤、32でオレンジ、64で黄色、96で緑、112で水色、176で青、240で紫
+* @param[in] hueParam 色相パラメータ 0~255 デジタルでよく言う色相とは違う、0で赤、16でオレンジ、64で黄色、96で緑、112で水色、192で青、240で紫
 * @param[in] saturation 彩度 0~100
 * @param[in] value 明度 0~100
 * @return DxColor_t RGB情報
 */
 uint GetColorCurRainbow(int hueParam, int saturation, int value) {
-	static const int table[17] = { 0, 20, 35, 48, 60, 84, 120, 180, 189, 200, 217, 240, 260, 276, 287, 300, 360 };
+	/*                             0      32      64       96       128       160       192       224       256 */
+	static const int table[17] = { 0, 30, 40, 50, 60, 90, 120, 150, 180, 190, 200, 215, 240, 278, 290, 300, 360 };
 	int h = 0;
 	int s = 100;
 	int v = 100;
