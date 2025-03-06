@@ -115,3 +115,25 @@ int keycur(int const* const mat, int num) {
 	InputAllKeyHold();
 	return GetKeyPushOnce();
 }
+
+void DrawLineCurve(int x1, int y1, int x2, int y2, char mode, unsigned int color, int thick) {
+	int end = x1 + 10;
+	switch (mode) {
+	case 1: // lin
+		DrawLine(x1, y1, x2, y2, color, thick);
+		break;
+	case 2: // acc
+		for (int i = x1; i <= x2; i += 10) {
+			end = mins_2(i + 10, x2);
+			DrawLine(i, pals(x1, y1, x2, y2, i), end, pals(x1, y1, x2, y2, end), color, thick);
+		}
+		break;
+	case 3: // dec
+		for (int i = x1; i <= x2; i += 10) {
+			end = mins_2(i + 10, x2);
+			DrawLine(i, pals(x2, y2, x1, y1, i), end, pals(x2, y2, x1, y1, end), color, thick);
+		}
+		break;
+	}
+	return;
+}

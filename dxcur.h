@@ -43,3 +43,4 @@ extern int GetKeyPushOnce();
 extern void InputAllKeyHold();
 extern void AvoidKeyBug();
 extern int keycur(int const* const mat, int num);
+extern void DrawLineCurve(int x1, int y1, int x2, int y2, char mode, unsigned int color, int thick);
