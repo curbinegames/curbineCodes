@@ -5,11 +5,13 @@
 
 #undef PlaySound
 
-#define COLOR_WHITE GetColor(255, 255, 255)
-#define COLOR_BLACK GetColor(  0,   0,   0)
-#define COLOR_RED   GetColor(255,   0,   0)
-#define COLOR_GREEN GetColor(  0, 191,   0) /* (0,255,0)‚¾‚Æ–¾‚é‚·‚¬‚é */
-#define COLOR_BLUE  GetColor(  0,   0, 255)
+#define COLOR_WHITE  GetColor(255, 255, 255)
+#define COLOR_BLACK  GetColor(  0,   0,   0)
+#define COLOR_RED    GetColor(255,   0,   0)
+#define COLOR_YELLOW GetColor(255, 255,   0)
+#define COLOR_GREEN  GetColor(  0, 191,   0) /* (0,255,0)‚¾‚Æ–¾‚é‚·‚¬‚é */
+#define COLOR_CYAN   GetColor(  0, 255, 255)
+#define COLOR_BLUE   GetColor(  0,   0, 255)
 
 #define DXLIB_PIC_HAND_DEFAULT -1
 #define DXLIB_SND_HAND_DEFAULT -1

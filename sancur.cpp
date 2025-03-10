@@ -213,7 +213,8 @@ uint GetColorFromHSV(int hue, int saturation, int value) {
 
 /**
 * curbineが個人的に綺麗だと思う虹色を出力する
-* @param[in] hueParam 色相パラメータ 0~255 デジタルでよく言う色相とは違う、0で赤、16でオレンジ、64で黄色、96で緑、112で水色、192で青、240で紫
+* @param[in] hueParam 色相パラメータ 0~255 デジタルでよく言う色相とは違う。
+*                0で赤、16でオレンジ、64で黄色、96で緑、112で水色、192で青、240で紫
 * @param[in] saturation 彩度 0~100
 * @param[in] value 明度 0~100
 * @return DxColor_t RGB情報
