@@ -311,3 +311,56 @@ int strrans(const TCHAR *p1) {
 	b = maxs_2(strsans(buf), a);
 	return GetRand(b - a) + a;
 }
+
+/**
+ * 与えられた文字列の()内を抽出する。
+ * @param[out] dest 抽出した文字列の格納場所
+ * @param[in] size destの配列数
+ * @param[in] src 元となる文字列
+ * @param[in] c 抽出する括弧の種類。対応している括弧は、(), [], {}, <>。無効な文字が指定された場合、()として処理
+ * @details 例: 入力 = "qw[cr{tg(iasd]e(knw)asd)v[vur]ne>", 指定文字 = '(', 出力 = "iasd]e(knw)asd"
+ *          例: 入力 = "qw[cr{tg(iasd]e(knw)asd)v[vur]ne>", 指定文字 = '[', 出力 = "cr{tg(iasd"
+ *          例: 入力 = "qw[cr{tg(iasd]e(knw)asd)v[vur]ne>", 指定文字 = '<', 出力 = ""
+ *          例: 入力 = "qw[cr{tg(iasd]e(knw)asd)v[vur]ne>", 指定文字 = '{', 出力 = "tg(iasd]e(knw)asd)v[vur]ne>"
+ *          例: 入力 = "qw[cr{tg(iasd]e(knw)asd)v[vur]ne>", 指定文字 = '3', 出力 = "iasd]e(knw)asd" (指定文字が無効の為、'('として処理)
+ */
+void strbox(TCHAR dest[], size_t size, const TCHAR src[], TCHAR c) {
+	TCHAR sc = _T('(');
+	TCHAR ec = _T(')');
+	uint count = 1;
+	uint srcp = 0;
+
+	switch (c) {
+	case _T('['):
+	case _T(']'):
+		sc = _T('[');
+		ec = _T(']');
+		break;
+	case _T('{'):
+	case _T('}'):
+		sc = _T('{');
+		ec = _T('}');
+		break;
+	case _T('<'):
+	case _T('>'):
+		sc = _T('<');
+		ec = _T('>');
+		break;
+	}
+
+	while (src[srcp] != sc) {
+		if (src[srcp] == _T('\0')) { return; }
+		srcp++;
+	}
+	srcp++;
+	dest[0] = _T('\0');
+	while (1) {
+		if (src[srcp] == _T('\0')) { return; }
+		if (src[srcp] == sc) { count++; }
+		if (src[srcp] == ec) { count--; }
+		if (count <= 0) { break; }
+		stradds_2(dest, size, src[srcp]);
+		srcp++;
+	}
+	return;
+}

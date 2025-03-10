@@ -34,6 +34,7 @@ extern void strnumsD(TCHAR ret[], double val, size_t size, int under);
 extern void vScanPrintfStr(TCHAR *ret, size_t size, const TCHAR s[], va_list as);
 extern void ScanPrintfStr(TCHAR *ret, size_t size, const TCHAR s[], ...);
 extern int strrans(const TCHAR *p1);
+extern void strbox(TCHAR dest[], size_t size, const TCHAR src[], TCHAR c);
 
 /* 使用してはいけない関数。過去に使っていたことがあるので、互換のために残す */
 #define strcopy(p1, p2, c) _tcscpy_s(p2, 255, p1)
