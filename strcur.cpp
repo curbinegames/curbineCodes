@@ -104,7 +104,6 @@ int strlens_2(const TCHAR* s, size_t size) {
  */
 int strsans_3(const TCHAR *p1, size_t size) {
 	int a = 0, b = 1;
-	if (*p1 == _T('R')) { return strrans(p1); }
 
 	for (int i = 0; i < size; i++) {
 		if (IS_NUMBER_CHAR(*p1)) { a = a * 10 + (*p1 - _T('0')); }
@@ -127,7 +126,6 @@ int strsans_3(const TCHAR *p1, size_t size) {
 double strsansD(const TCHAR *p1, size_t size) {
 	short int b = 1, c = 0, d = 99, i;
 	double a = 0;
-	if (*p1 == _T('R')) { return strrans(p1); }
 
 	for (int ip = 0; ip < size; ip++) {
 		if (IS_NUMBER_CHAR(*p1)) {
@@ -298,18 +296,6 @@ void ScanPrintfStr(TCHAR *ret, size_t size, const TCHAR s[], ...) {
 	_vstprintf_s(ret, size, s, as);
 	va_end(as);
 	return;
-}
-
-/* TODO: ‚±‚ê‚à‘½•ªrec‚É‚ ‚é‚×‚« */
-int strrans(const TCHAR *p1) {
-	int a, b;
-	TCHAR buf[16];
-	strcopy_2(p1, buf, 16);
-	strmods(buf, 2);
-	a = strsans(buf);
-	strnex_EX(buf, _T(','));
-	b = maxs_2(strsans(buf), a);
-	return GetRand(b - a) + a;
 }
 
 /**
