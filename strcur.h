@@ -14,6 +14,9 @@
 /* p1をp2にコピーする */
 #define strcopy_2(p1, p2, size) _tcscpy_s(p2, size, p1)
 
+/* strands_2関数の引数p2を直接指定する時に使えるマクロ */
+#define strands_direct(p1, p2) strands_2(p1, sizeof(p2) / sizeof(TCHAR), p2, sizeof(p2) / sizeof(TCHAR))
+
 /* 文字cが数字であれぼTRUEを返す */
 #define IS_NUMBER_CHAR(c) (IS_BETWEEN(_T('0'), (c), _T('9')))
 
