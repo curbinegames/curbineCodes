@@ -4,7 +4,7 @@
 #include "dxcur.h"
 #include "sancur.h"
 #include "strcur.h"
-#include "system.h"
+#include "RecSystem.h"
 
 void DrawLineAnchor(int left, int up, int right, int down, uint color, dxdraw_anchor_t anchor) {
 	int drawX = left;
