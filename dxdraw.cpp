@@ -18,6 +18,7 @@ void DrawLineAnchor(int left, int up, int right, int down, uint color, dxdraw_an
 		return;
 	}
 
+	/* TODO: 座標変更を別関数にする */
 	switch (anchor) {
 	case DXDRAW_ANCHOR_CENTRE_LEFT:
 	case DXDRAW_ANCHOR_BOTTOM_LEFT:
@@ -57,6 +58,7 @@ void DrawLineAnchor(int left, int up, int right, int down, uint color, dxdraw_an
 	return;
 }
 
+/* TODO: centre系の仕様を変更する */
 void DrawBoxAnchor(int left, int up, int right, int down, uint color, dxdraw_anchor_t anchor, int FillFg) {
 	int drawX = left;
 	int drawY = up;
