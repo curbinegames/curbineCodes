@@ -208,7 +208,7 @@ uint GetColorFromHSV(int hue, int saturation, int value) {
 	g = lins(0, scaleLow, 255, scaleHigh, g);
 	b = lins(0, scaleLow, 255, scaleHigh, b);
 
-	return GetColor(r, g, b);
+	return ( (r << 16) | (g << 8) | (b) );
 }
 
 /**
