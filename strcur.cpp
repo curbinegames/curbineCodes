@@ -125,7 +125,7 @@ int strsans_3(const TCHAR *p1, size_t size) {
  * @note この関数は少数以下も変換します。整数のみで良い場合はstrsans_3を使用してください。
  */
 double strsansD(const TCHAR *p1, size_t size) {
-	short int b = 1, c = 0, d = 99, i;
+	short b = 1, c = 0, d = 99, i;
 	double a = 0;
 
 	for (int ip = 0; ip < size; ip++) {
@@ -165,7 +165,7 @@ void strnex_2(TCHAR *p1, size_t size) {
  */
 void strnex_EX2(TCHAR *p1, size_t size, TCHAR p3) {
 	TCHAR *p2 = p1;
-	short int a = 1;
+	short a = 1;
 	for (uint inum = 0; (inum < size) && IS_NORMAL_CHAR(*p1) && *p1 != p3 && *p1 != _T('\0'); inum++) {
 		a++;
 		p1++;
