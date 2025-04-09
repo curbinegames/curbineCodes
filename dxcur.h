@@ -27,11 +27,40 @@ typedef int DxSnd_t; /* DXƒ‰ƒCƒuƒ‰ƒŠ‚ÌƒTƒEƒ“ƒh‚Ìƒnƒ“ƒhƒ‹‚Å‚ ‚é‚±‚Æ‚ğ¦‚·Œ^BintŒ
 typedef int DxFile_t; /* DXƒ‰ƒCƒuƒ‰ƒŠ‚Ìƒtƒ@ƒCƒ‹‚Ìƒnƒ“ƒhƒ‹‚Å‚ ‚é‚±‚Æ‚ğ¦‚·Œ^BintŒ^ */
 typedef int DxTime_t; /* DXƒ‰ƒCƒuƒ‰ƒŠ‚ÌGetNowCount()“™‚Åæ“¾‚µ‚½ŠÔ‚Å‚ ‚é‚±‚Æ‚ğ¦‚·Œ^BintŒ^ */
 
+/* DeleteGraph‚ğ©“®‚Å‚â‚éƒNƒ‰ƒX */
+class dxcur_pic_c {
+private:
+	DxPic_t pic = DXLIB_PIC_NULL;
+
+public:
+	dxcur_pic_c() {}
+
+	dxcur_pic_c(const TCHAR *path) {
+		this->pic = LoadGraph(path);
+	}
+
+	~dxcur_pic_c() {
+		if (this->pic != DXLIB_PIC_NULL) {
+			DeleteGraph(this->pic);
+		}
+	}
+
+public:
+	inline DxPic_t handle(void) const {
+		return this->pic;
+	}
+
+	inline void reload(const TCHAR *path) {
+		DeleteGraph(this->pic);
+		this->pic = LoadGraph(path);
+	}
+};
+
 /* “¯‚¶‰¹º‚ª2‰ñˆÈã“¯‚¶ƒ^ƒCƒ~ƒ“ƒO‚Å‚È‚é‚±‚Æ‚ğ–h‚¢‚¾ƒNƒ‰ƒX */
 class dxcur_snd_c {
 private:
 	DxTime_t Btime = 0; // ‘O‰ñ‚È‚ç‚µ‚½ŠÔ
-	DxTime_t Gtime = 2; // ‰ñ”ğ‚·‚éŠÔ
+	DxTime_t Gtime = 10; // ‰ñ”ğ‚·‚éŠÔ
 	DxSnd_t mat; // ‰¹ºƒnƒ“ƒhƒ‹
 public:
 	dxcur_snd_c();
