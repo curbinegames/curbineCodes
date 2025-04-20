@@ -16,6 +16,9 @@ typedef enum dxdraw_anchor_e {
 	DXDRAW_ANCHOR_BOTTOM_RIGHT,  /** ‰º‚Ì‰E */
 } dxdraw_anchor_t;
 
+extern int  GetScreenXSize(void);
+extern int  GetScreenYSize(void);
+extern void GetScreenSize(int *x, int *y);
 extern void DrawLineAnchor(int left, int up, int right, int down, uint color, dxdraw_anchor_t anchor);
 extern void DrawBoxAnchor(int left, int up, int right, int down, uint color, dxdraw_anchor_t anchor, int FillFg);
 extern void DrawGraphAnchor(int x, int y, int pic, dxdraw_anchor_t anchor);

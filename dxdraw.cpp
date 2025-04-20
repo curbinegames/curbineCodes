@@ -4,14 +4,40 @@
 #include "dxcur.h"
 #include "sancur.h"
 #include "strcur.h"
-/* TODO: カーコードでレコランのソースを呼んではダメ */
-#include "RecSystem.h"
+
+#define DEFAULT_WINDOW_SIZE_X 640
+#define DEFAULT_WINDOW_SIZE_Y 480
+
+int GetScreenXSize(void) {
+	int x = DEFAULT_WINDOW_SIZE_X;
+	int y = DEFAULT_WINDOW_SIZE_Y;
+	int cr = 0;
+	GetScreenState(&x, &y, &cr);
+	return x;
+}
+
+int GetScreenYSize(void) {
+	int x = DEFAULT_WINDOW_SIZE_X;
+	int y = DEFAULT_WINDOW_SIZE_Y;
+	int cr = 0;
+	GetScreenState(&x, &y, &cr);
+	return y;
+}
+
+void GetScreenSize(int *x, int *y) {
+	int cr = 0;
+	GetScreenState(x, y, &cr);
+	return;
+}
 
 void DrawLineAnchor(int left, int up, int right, int down, uint color, dxdraw_anchor_t anchor) {
 	int drawX = left;
 	int drawY = up;
 	int sizeX = right - left;
 	int sizeY = down - up;
+	int screenX = DEFAULT_WINDOW_SIZE_X;
+	int screenY = DEFAULT_WINDOW_SIZE_Y;
+	GetScreenSize(&screenX, &screenY);
 
 	if (anchor == DXDRAW_ANCHOR_TOP_LEFT) {
 		DrawLine(left, up, right, down, color);
@@ -27,12 +53,12 @@ void DrawLineAnchor(int left, int up, int right, int down, uint color, dxdraw_an
 	case DXDRAW_ANCHOR_TOP_CENTRE:
 	case DXDRAW_ANCHOR_CENTRE:
 	case DXDRAW_ANCHOR_BOTTOM_CENTRE:
-		drawX = (WINDOW_SIZE_X - sizeX + 2 * left) / 2;
+		drawX = (screenX - sizeX + 2 * left) / 2;
 		break;
 	case DXDRAW_ANCHOR_TOP_RIGHT:
 	case DXDRAW_ANCHOR_CENTRE_RIGHT:
 	case DXDRAW_ANCHOR_BOTTOM_RIGHT:
-		drawX = WINDOW_SIZE_X + left;
+		drawX = screenX + left;
 		break;
 	}
 
@@ -44,12 +70,12 @@ void DrawLineAnchor(int left, int up, int right, int down, uint color, dxdraw_an
 	case DXDRAW_ANCHOR_CENTRE_LEFT:
 	case DXDRAW_ANCHOR_CENTRE:
 	case DXDRAW_ANCHOR_CENTRE_RIGHT:
-		drawY = (WINDOW_SIZE_Y - sizeY + 2 * up) / 2;
+		drawY = (screenY - sizeY + 2 * up) / 2;
 		break;
 	case DXDRAW_ANCHOR_BOTTOM_LEFT:
 	case DXDRAW_ANCHOR_BOTTOM_CENTRE:
 	case DXDRAW_ANCHOR_BOTTOM_RIGHT:
-		drawY = WINDOW_SIZE_Y + up;
+		drawY = screenY + up;
 		break;
 	}
 
@@ -64,6 +90,9 @@ void DrawBoxAnchor(int left, int up, int right, int down, uint color, dxdraw_anc
 	int drawY = up;
 	int sizeX = right - left;
 	int sizeY = down - up;
+	int screenX = DEFAULT_WINDOW_SIZE_X;
+	int screenY = DEFAULT_WINDOW_SIZE_Y;
+	GetScreenSize(&screenX, &screenY);
 
 	if (anchor == DXDRAW_ANCHOR_TOP_LEFT) {
 		DrawBox(left, up, right, down, color, FillFg);
@@ -78,12 +107,12 @@ void DrawBoxAnchor(int left, int up, int right, int down, uint color, dxdraw_anc
 	case DXDRAW_ANCHOR_TOP_CENTRE:
 	case DXDRAW_ANCHOR_CENTRE:
 	case DXDRAW_ANCHOR_BOTTOM_CENTRE:
-		drawX = (WINDOW_SIZE_X - sizeX + 2 * left) / 2;
+		drawX = (screenX - sizeX + 2 * left) / 2;
 		break;
 	case DXDRAW_ANCHOR_TOP_RIGHT:
 	case DXDRAW_ANCHOR_CENTRE_RIGHT:
 	case DXDRAW_ANCHOR_BOTTOM_RIGHT:
-		drawX = WINDOW_SIZE_X + left;
+		drawX = screenX + left;
 		break;
 	}
 
@@ -95,12 +124,12 @@ void DrawBoxAnchor(int left, int up, int right, int down, uint color, dxdraw_anc
 	case DXDRAW_ANCHOR_CENTRE_LEFT:
 	case DXDRAW_ANCHOR_CENTRE:
 	case DXDRAW_ANCHOR_CENTRE_RIGHT:
-		drawY = (WINDOW_SIZE_Y - sizeY + 2 * up) / 2;
+		drawY = (screenY - sizeY + 2 * up) / 2;
 		break;
 	case DXDRAW_ANCHOR_BOTTOM_LEFT:
 	case DXDRAW_ANCHOR_BOTTOM_CENTRE:
 	case DXDRAW_ANCHOR_BOTTOM_RIGHT:
-		drawY = WINDOW_SIZE_Y + up;
+		drawY = screenY + up;
 		break;
 	}
 
@@ -112,6 +141,7 @@ void DrawBoxAnchor(int left, int up, int right, int down, uint color, dxdraw_anc
 
 static int TransDrawX(int baseX, int sizeX, dxdraw_anchor_t anchor) {
 	int drawX = 0;
+	int screenX = GetScreenXSize();
 
 	switch (anchor) {
 	case DXDRAW_ANCHOR_TOP_LEFT:
@@ -122,12 +152,12 @@ static int TransDrawX(int baseX, int sizeX, dxdraw_anchor_t anchor) {
 	case DXDRAW_ANCHOR_TOP_CENTRE:
 	case DXDRAW_ANCHOR_CENTRE:
 	case DXDRAW_ANCHOR_BOTTOM_CENTRE:
-		drawX = (WINDOW_SIZE_X - sizeX + 2 * baseX) / 2;
+		drawX = (screenX - sizeX + 2 * baseX) / 2;
 		break;
 	case DXDRAW_ANCHOR_TOP_RIGHT:
 	case DXDRAW_ANCHOR_CENTRE_RIGHT:
 	case DXDRAW_ANCHOR_BOTTOM_RIGHT:
-		drawX = WINDOW_SIZE_X - sizeX + baseX;
+		drawX = screenX - sizeX + baseX;
 		break;
 	}
 
@@ -136,6 +166,7 @@ static int TransDrawX(int baseX, int sizeX, dxdraw_anchor_t anchor) {
 
 static int TransDrawY(int baseY, int sizeY, dxdraw_anchor_t anchor) {
 	int drawY = 0;
+	int screenY = GetScreenYSize();
 
 	switch (anchor) {
 	case DXDRAW_ANCHOR_TOP_LEFT:
@@ -146,12 +177,12 @@ static int TransDrawY(int baseY, int sizeY, dxdraw_anchor_t anchor) {
 	case DXDRAW_ANCHOR_CENTRE_LEFT:
 	case DXDRAW_ANCHOR_CENTRE:
 	case DXDRAW_ANCHOR_CENTRE_RIGHT:
-		drawY = (WINDOW_SIZE_Y - sizeY + 2 * baseY) / 2;
+		drawY = (screenY - sizeY + 2 * baseY) / 2;
 		break;
 	case DXDRAW_ANCHOR_BOTTOM_LEFT:
 	case DXDRAW_ANCHOR_BOTTOM_CENTRE:
 	case DXDRAW_ANCHOR_BOTTOM_RIGHT:
-		drawY = WINDOW_SIZE_Y - sizeY + baseY;
+		drawY = screenY - sizeY + baseY;
 		break;
 	}
 
