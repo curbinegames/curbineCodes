@@ -248,3 +248,40 @@ uint GetColorCurRainbow(int hueParam, int saturation, int value) {
 
 	return GetColorFromHSV(h, s, v);
 }
+
+#if 1 /* cur_deviation_c */
+
+void cur_deviation_c::add(int val) {
+	this->view[this->head] = val;
+	if (0x7fffffff < (double)(this->ssum) + val * val) {
+		this->sum   /= 2;
+		this->ssum  /= 2;
+		this->count /= 2;
+	}
+	this->sum += val;
+	this->ssum += val * val;
+	this->count++;
+	this->head = LOOP_ADD(this->head, 30);
+	return;
+}
+
+int cur_deviation_c::GetHead(void) const {
+	return this->head;
+}
+
+int cur_deviation_c::GetList(uint num) const {
+	num = betweens(0, num, 29);
+	return this->view[num];
+}
+
+int cur_deviation_c::GetAverage(void) const {
+	if (this->count == 0) { return 0; }
+	return this->sum / this->count;
+}
+
+int cur_deviation_c::GetDeviation(void) const {
+	if (this->count == 0) { return 0; }
+	return sanrute((this->ssum * this->count - this->sum * this->sum) / (this->count * this->count));
+}
+
+#endif /* cur_deviation_c */

@@ -54,6 +54,24 @@ extern void   rot_xy_pos(int rot, int *x, int *y);
 extern uint   GetColorFromHSV(int hue, int saturation, int value);
 extern uint   GetColorCurRainbow(int hueParam, int saturation, int value);
 
+/* 与えられたデータの平均と標準偏差を求めるクラス */
+/* 少しレコラン寄りのコードになってる */
+class cur_deviation_c {
+private:
+	int  view[30] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
+	int  sum      = 0; /* 合計 */
+	uint ssum     = 0; /* 2乗の合計 */
+	uint count    = 0; /* データ数 */
+	uint head     = 0; /* 次に書く場所 */
+
+public:
+	void add(int val);
+	int GetHead(void) const;
+	int GetList(uint num) const;
+	int GetAverage(void) const;
+	int GetDeviation(void) const;
+};
+
 /* 使用してはいけない関数。過去に使っていたことがあるので、互換のために残す */
 #define maxs(a, b)          mins_2((a), (b))
 #define mins(a, b)          maxs_2((a), (b))

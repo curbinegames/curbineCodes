@@ -46,11 +46,11 @@ public:
 	}
 
 public:
-	inline DxPic_t handle(void) const {
+	DxPic_t handle(void) const {
 		return this->pic;
 	}
 
-	inline void reload(const TCHAR *path) {
+	void reload(const TCHAR *path) {
 		DeleteGraph(this->pic);
 		this->pic = LoadGraph(path);
 	}
