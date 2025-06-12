@@ -2,6 +2,7 @@
 
 #include <tchar.h>
 #include <DxLib.h>
+#include <sancur.h>
 
 #undef PlaySound
 
@@ -26,6 +27,9 @@ typedef int DxPic_t; /* DXライブラリのグラフィックのハンドルであることを示す型。
 typedef int DxSnd_t; /* DXライブラリのサウンドのハンドルであることを示す型。int型 */
 typedef int DxFile_t; /* DXライブラリのファイルのハンドルであることを示す型。int型 */
 typedef int DxTime_t; /* DXライブラリのGetNowCount()等で取得した時間であることを示す型。int型 */
+
+/* TODO: ファイル整理いるか? */
+#include <dxdraw.h>
 
 /* DeleteGraphを自動でやるクラス */
 class dxcur_pic_c {
@@ -68,6 +72,48 @@ public:
 	void SetSound(const TCHAR *path);
 	void SetVolume(int val);
 	void PlaySound(void);
+};
+
+class cur_camera_c {
+private:
+	int cam_xpos = 0;
+	int cam_ypos = 0;
+	double cam_zoom = 1.0;
+	int cam_rot = 0;
+	int ScXsize = 640;
+	int ScYsize = 480;
+
+private:
+	void CalDrawPos(int *x, int *y) const;
+
+public:
+	cur_camera_c(void);
+
+public:
+	void DrawLineOnCam(int x1, int y1, int x2, int y2, DxColor_t color, uint thick) const;
+	void DrawLineCurveOnCam(int x1, int y1, int x2, int y2, int mode, unsigned int color, int thick) const;
+	void DrawStringOnCam(int x, int y, const TCHAR *str, DxColor_t cr) const;
+	void DrawGraphOnCam(int x, int y, DxPic_t pic) const;
+	void DrawTurnGraphOnCam(int x, int y, DxPic_t pic) const;
+	void DrawDeformationPicOnCam(int x, int y, double size, int rot, int alpha, DxPic_t pic);
+
+public:
+	int GetXPosOnCam(int x, int y) const;
+	int GetYPosOnCam(int x, int y) const;
+
+public:
+	int    GetXPos(void) const;
+	void   SetXPos(int val);
+	void   AddXPos(int val);
+	int    GetYPos(void) const;
+	void   SetYPos(int val);
+	void   AddYPos(int val);
+	double GetZoom(void) const;
+	void   SetZoom(double val);
+	void   AddZoom(double val);
+	int    GetRot(void) const;
+	void   SetRot(int val);
+	void   AddRot(int val);
 };
 
 extern int GetMouseKeyCur(int* key, int* posX, int* posY, int* PR);
