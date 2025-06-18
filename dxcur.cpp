@@ -230,24 +230,42 @@ int keycur(int const* const mat, int num) {
 	return GetKeyPushOnce();
 }
 
-void DrawLineCurve(int x1, int y1, int x2, int y2, char mode, unsigned int color, int thick) {
-	int end = x1 + 10;
+/* TODO: 余裕があればベジエ作る */
+
+/**
+ * TODO: 関数コメント書く
+ */
+void DrawLineCurveDiv(int x1, int y1, int x2, int y2, char mode, intx100_t start, intx100_t end,
+	uint color, int thick)
+{
+	if (end <= start) { return; }
+	int drawXStart = 0;
+	int drawXEnd   = 0;
+	int lend = x1 + 10;
+
+	drawXStart = ((100 - start) * x1 + start * x2) / 100;
+	drawXEnd   = ((100 - end  ) * x1 + end   * x2) / 100;
 	switch (mode) {
 	case 1: // lin
-		DrawLine(x1, y1, x2, y2, color, thick);
+		DrawLine(drawXStart, y1, drawXEnd, y2, color, thick);
 		break;
 	case 2: // acc
-		for (int i = x1; i <= x2; i += 10) {
-			end = mins_2(i + 10, x2);
-			DrawLine(i, pals(x1, y1, x2, y2, i), end, pals(x1, y1, x2, y2, end), color, thick);
+		for (int i = drawXStart; i <= drawXEnd; i += 10) {
+			lend = mins_2(i + 10, x2);
+			DrawLine(i, pals(x1, y1, x2, y2, i), lend, pals(x1, y1, x2, y2, lend), color, thick);
 		}
 		break;
 	case 3: // dec
-		for (int i = x1; i <= x2; i += 10) {
-			end = mins_2(i + 10, x2);
-			DrawLine(i, pals(x2, y2, x1, y1, i), end, pals(x2, y2, x1, y1, end), color, thick);
+		for (int i = drawXStart; i <= drawXEnd; i += 10) {
+			lend = mins_2(i + 10, x2);
+			DrawLine(i, pals(x2, y2, x1, y1, i), lend, pals(x2, y2, x1, y1, lend), color, thick);
 		}
 		break;
 	}
+	return;
+}
+
+void DrawLineCurve(int x1, int y1, int x2, int y2, char mode, unsigned int color, int thick) {
+	DrawLineCurveDiv(x1, y1, x2, y2, mode, 0, 100, color, thick);
 	return;
 }

@@ -123,4 +123,6 @@ extern int GetKeyPushOnce();
 extern void InputAllKeyHold();
 extern void AvoidKeyBug();
 extern int keycur(int const* const mat, int num);
+extern void DrawLineCurveDiv(int x1, int y1, int x2, int y2, char mode, intx100_t start,
+	intx100_t end, uint color, int thick);
 extern void DrawLineCurve(int x1, int y1, int x2, int y2, char mode, unsigned int color, int thick);
