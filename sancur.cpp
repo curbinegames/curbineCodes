@@ -18,7 +18,27 @@
  * @return double 点1(x1,y1)、点2(x2,y2)、を通る直線を考えた時のxの値
  */
 double lins(double x1, double y1, double x2, double y2, double x) {
-	if (x1 == x2) { return x1; }
+	if (x1 == x2) { return y1; }
+	return (y2 - y1) * (x - x1) / (x2 - x1) + y1;
+}
+
+/**
+ * lins関数のxの値をx1~x2の範囲内に収める版
+ * @param[in] x1 点1のx座標
+ * @param[in] y1 点1のy座標
+ * @param[in] x2 点2のx座標
+ * @param[in] y2 点2のy座標
+ * @param[in] x 評価する値
+ * @return double 点1(x1,y1)、点2(x2,y2)、を通る直線を考えた時のxの値
+ */
+double lins_scale(double x1, double y1, double x2, double y2, double x) {
+	if (x1 == x2) { return y1; }
+	if (x1 <= x2) {
+		x = betweens_D(x1, x, x2);
+	}
+	else {
+		x = betweens_D(x2, x, x1);
+	}
 	return (y2 - y1) * (x - x1) / (x2 - x1) + y1;
 }
 
@@ -34,7 +54,31 @@ double lins(double x1, double y1, double x2, double y2, double x) {
 double pals(double x1, double y1, double x2, double y2, double x) {
 	double s1 = 0;
 	double s2 = 0;
-	if (x1 == x2) { return x1; }
+	if (x1 == x2) { return y1; }
+	s1 = x - x1;
+	s2 = x2 - x1;
+	return (y2 - y1) * s1 * s1 / (s2 * s2) + y1;
+}
+
+/**
+ * pals関数のxの値をx1~x2の範囲内に収める版
+ * @param[in] x1 頂点のx座標
+ * @param[in] y1 頂点のy座標
+ * @param[in] x2 通過点のx座標
+ * @param[in] y2 通過点のy座標
+ * @param[in] x 評価する値
+ * @return double 頂点(x1,y1)、通過点(x2,y2)を通る二次関数を考えた時のxの値
+ */
+double pals_scale(double x1, double y1, double x2, double y2, double x) {
+	double s1 = 0;
+	double s2 = 0;
+	if (x1 == x2) { return y1; }
+	if (x1 <= x2) {
+		x = betweens_D(x1, x, x2);
+	}
+	else {
+		x = betweens_D(x2, x, x1);
+	}
 	s1 = x - x1;
 	s2 = x2 - x1;
 	return (y2 - y1) * s1 * s1 / (s2 * s2) + y1;

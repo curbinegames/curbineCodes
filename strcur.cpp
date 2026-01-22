@@ -274,32 +274,6 @@ void strnumsD(TCHAR ret[], double val, size_t size, int under) {
 }
 
 /**
- * やってることはvsprintf_sと一緒の為、わざわざこの関数を使う必要なし。vsprintf_sを使ってください。
- * @param[out] ret 変換した文字列を格納する場所
- * @param[in] size retの大きさ。配列数で指定
- * @param[in] s 変換する文字列
- * @param[in] as valistの実体
- */
-void vScanPrintfStr(TCHAR *ret, size_t size, const TCHAR s[], va_list as) {
-	_vstprintf_s(ret, size, s, as);
-	return;
-}
-
-/**
- * やってることはsprintf_sと一緒の為、わざわざこの関数を使う必要なし。sprintf_sを使ってください。
- * @param[out] ret 変換した文字列を格納する場所
- * @param[in] size retの大きさ。配列数で指定
- * @param[in] s 変換する文字列
- */
-void ScanPrintfStr(TCHAR *ret, size_t size, const TCHAR s[], ...) {
-	va_list as;
-	va_start(as, s);
-	_vstprintf_s(ret, size, s, as);
-	va_end(as);
-	return;
-}
-
-/**
  * 与えられた文字列の()内を抽出する。
  * @param[out] dest 抽出した文字列の格納場所
  * @param[in] size destの配列数

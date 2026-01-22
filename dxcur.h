@@ -65,13 +65,15 @@ class dxcur_snd_c {
 private:
 	DxTime_t Btime = 0; // 前回ならした時間
 	DxTime_t Gtime = 10; // 回避する時間
-	DxSnd_t mat; // 音声ハンドル
+	DxSnd_t mat = -1; // 音声ハンドル
 public:
+	dxcur_snd_c(const TCHAR *path);
 	dxcur_snd_c();
 	~dxcur_snd_c();
 	void SetSound(const TCHAR *path);
 	void SetVolume(int val);
-	void PlaySound(void);
+	void PlaySound(bool loop = false);
+	DxSnd_t handle(void) const;
 };
 
 class cur_camera_c {

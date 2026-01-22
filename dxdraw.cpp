@@ -5,6 +5,9 @@
 #include "sancur.h"
 #include "strcur.h"
 
+typedef unsigned int uint;
+typedef int intx100_t;
+
 #define DEFAULT_WINDOW_SIZE_X 640
 #define DEFAULT_WINDOW_SIZE_Y 480
 

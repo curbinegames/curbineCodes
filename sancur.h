@@ -1,7 +1,10 @@
 #pragma once
 
 /* a/bを返す、ただし、bが0の時はcを返す。0除算回避の為に作った */
-#define DIV_AVOID_ZERO(a, b, c) ( ((b) == 0) ? (c) : ((a) / (b)) )
+#define DIV_AVOID_ZERO(a, b, c) ( ((b) == 0) ? (c) : ((a) / (double)(b)) )
+
+/* a%bを返す、ただし、bが0の時はcを返す。0除算回避の為に作った */
+#define MOD_AVOID_ZERO(a, b, c) ( ((b) == 0) ? (c) : ((a) % (int)(b)) )
 
 #define LOOP_ADD(mat, loop) ( ((mat) + 1) % (loop) )
 #define LOOP_SUB(mat, loop) ( ((mat) + (loop) - 1) % (loop) )
@@ -35,7 +38,8 @@
 /* 配列数を返す */
 #define ARRAY_COUNT(a) ( sizeof(a) / sizeof(a[0]) )
 
-typedef unsigned int uint;
+typedef unsigned char uchar;
+typedef unsigned int  uint;
 typedef int intx100_t; /** 100倍していることを示すint型 */
 
 typedef enum cur_move_e {
@@ -45,7 +49,9 @@ typedef enum cur_move_e {
 } cur_move_type_t;
 
 extern double lins(double x1, double y1, double x2, double y2, double x);
+extern double lins_scale(double x1, double y1, double x2, double y2, double x);
 extern double pals(double x1, double y1, double x2, double y2, double x);
+extern double pals_scale(double x1, double y1, double x2, double y2, double x);
 extern double movecal(int mode, double x1, double y1, double x2, double y2, double x);
 extern double sanrute(double c);
 extern int    abss(int a, int b);

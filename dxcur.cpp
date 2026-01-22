@@ -9,6 +9,10 @@
 static int keyhold[256];
 
 /* dxcur_snd_c */
+dxcur_snd_c::dxcur_snd_c(const TCHAR *path) {
+	this->mat = LoadSoundMem(path);
+}
+
 dxcur_snd_c::dxcur_snd_c() {}
 
 dxcur_snd_c::~dxcur_snd_c() {
@@ -23,12 +27,16 @@ void dxcur_snd_c::SetVolume(int val) {
 	ChangeVolumeSoundMem(val, this->mat);
 }
 
-void dxcur_snd_c::PlaySound(void) {
+void dxcur_snd_c::PlaySound(bool loop) {
 	DxTime_t Ntime = GetNowCount();
 	if ((this->Btime + this->Gtime) < Ntime) {
-		PlaySoundMem(this->mat, DX_PLAYTYPE_BACK);
+		PlaySoundMem(this->mat, loop ? DX_PLAYTYPE_LOOP : DX_PLAYTYPE_BACK);
 		this->Btime = Ntime;
 	}
+}
+
+DxSnd_t dxcur_snd_c::handle(void) const {
+	return this->mat;
 }
 
 #if 1 /* cur_camera_c */

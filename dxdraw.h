@@ -3,6 +3,9 @@
 #include "dxcur.h"
 #include "sancur.h"
 
+typedef unsigned int uint;
+typedef int intx100_t;
+
 /** dxdraw‚Åg‚¤Šî€“_‚Ì—ñ‹“Œ^ */
 typedef enum dxdraw_anchor_e {
 	DXDRAW_ANCHOR_TOP_LEFT = 0,  /** ã‚Ì¶ */
