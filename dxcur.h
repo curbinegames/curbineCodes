@@ -37,27 +37,13 @@ private:
 	DxPic_t pic = DXLIB_PIC_NULL;
 
 public:
-	dxcur_pic_c() {}
-
-	dxcur_pic_c(const TCHAR *path) {
-		this->pic = LoadGraph(path);
-	}
-
-	~dxcur_pic_c() {
-		if (this->pic != DXLIB_PIC_NULL) {
-			DeleteGraph(this->pic);
-		}
-	}
+	dxcur_pic_c();
+	dxcur_pic_c(const TCHAR *path);
+	~dxcur_pic_c();
 
 public:
-	DxPic_t handle(void) const {
-		return this->pic;
-	}
-
-	void reload(const TCHAR *path) {
-		DeleteGraph(this->pic);
-		this->pic = LoadGraph(path);
-	}
+	DxPic_t handle(void) const;
+	void reload(const TCHAR *path);
 };
 
 /* 同じ音声が2回以上同じタイミングでなることを防いだクラス */

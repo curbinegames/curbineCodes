@@ -1,14 +1,40 @@
 #pragma once
 
-#include "DxLib.h"
-#include "dxcur.h"
-#include "sancur.h"
+#include <DxLib.h>
+#include <dxcur.h>
+#include <sancur.h>
 
 #undef PlaySound
 
 static int keyhold[256];
 
-/* dxcur_snd_c */
+#if 1 /* dxcur_pic_c */
+
+dxcur_pic_c::dxcur_pic_c() {}
+
+dxcur_pic_c::dxcur_pic_c(const TCHAR *path) {
+	this->pic = LoadGraph(path);
+}
+
+dxcur_pic_c::~dxcur_pic_c() {
+	if (this->pic != DXLIB_PIC_NULL) {
+		DeleteGraph(this->pic);
+	}
+}
+
+DxPic_t dxcur_pic_c::handle(void) const {
+	return this->pic;
+}
+
+void dxcur_pic_c::reload(const TCHAR *path) {
+	DeleteGraph(this->pic);
+	this->pic = LoadGraph(path);
+}
+
+#endif /* dxcur_pic_c */
+
+#if 1 /* dxcur_snd_c */
+
 dxcur_snd_c::dxcur_snd_c(const TCHAR *path) {
 	this->mat = LoadSoundMem(path);
 }
@@ -38,6 +64,8 @@ void dxcur_snd_c::PlaySound(bool loop) {
 DxSnd_t dxcur_snd_c::handle(void) const {
 	return this->mat;
 }
+
+#endif /* dxcur_snd_c */
 
 #if 1 /* cur_camera_c */
 
