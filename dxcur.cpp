@@ -181,6 +181,11 @@ void   cur_camera_c::AddRot (int val)    { this->cam_rot  += val; }
 
 #endif
 
+int GetRandBetween(int min, int max) {
+	return GetRand(max - min) + min;
+	// return rand() % (max - min) + min - 1; /* DxLibを使わないバージョン */
+}
+
 /**
  * マウスのキー入力の情報を返す
  * @param[out] key 反応したボタンの種類

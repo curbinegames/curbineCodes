@@ -104,6 +104,7 @@ public:
 	void   AddRot(int val);
 };
 
+extern int GetRandBetween(int min, int max);
 extern int GetMouseKeyCur(int* key, int* posX, int* posY, int* PR);
 extern void AvoidKeyRush();
 extern int GetKeyHold(int n);
