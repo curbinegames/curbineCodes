@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include <tchar.h>
 #include <DxLib.h>
 #include <sancur.h>
@@ -44,6 +46,25 @@ public:
 public:
 	DxPic_t handle(void) const;
 	void reload(const TCHAR *path);
+};
+
+/* LoadDivGraph関連 */
+class dxcur_divpic_c {
+	bool usable = false;
+	std::vector<DxPic_t> pic;
+
+public:
+	dxcur_divpic_c(void);
+	dxcur_divpic_c(const TCHAR *path, int AllNum, int XNum, int YNum); /* XSizeとYSizeを自動計算する */
+	dxcur_divpic_c(const TCHAR *path, int AllNum, int XNum, int YNum, int XSize, int YSize);
+	dxcur_divpic_c(dxcur_divpic_c &&obj) noexcept;
+	dxcur_divpic_c& operator=(dxcur_divpic_c &&obj) noexcept;
+	~dxcur_divpic_c();
+
+	DxPic_t handle(size_t n) const;
+	void reload(const TCHAR *path, int AllNum, int XNum, int YNum); /* XSizeとYSizeを自動計算する */
+	void reload(const TCHAR *path, int AllNum, int XNum, int YNum, int XSize, int YSize);
+	void clear(void);
 };
 
 /* 同じ音声が2回以上同じタイミングでなることを防いだクラス */
