@@ -81,6 +81,7 @@ public:
 	void SetVolume(int val);
 	void PlaySound(bool loop = false);
 	DxSnd_t handle(void) const;
+	void reload(const TCHAR *path);
 };
 
 class cur_camera_c {

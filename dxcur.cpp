@@ -173,6 +173,11 @@ DxSnd_t dxcur_snd_c::handle(void) const {
 	return this->mat;
 }
 
+void dxcur_snd_c::reload(const TCHAR *path) {
+	DeleteSoundMem(this->mat);
+	this->mat = LoadSoundMem(path);
+}
+
 #endif /* dxcur_snd_c */
 
 #if 1 /* cur_camera_c */
