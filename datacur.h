@@ -2,33 +2,84 @@
 
 #include <vector>
 
+#include <sancur.h>
+
 template<typename DataBase>
 class datacur_cursor_vector {
+private:
 	std::vector<DataBase>data; /* データベース */
 	const size_t limit_size = 2000; /* データ数の上限 */
 	size_t No = 0; /* 今見ているデータ番号 */
 
 public:
-	datacur_cursor_vector(void);
-	datacur_cursor_vector(size_t sz);
-	const DataBase& operator[](int n) const;
+	datacur_cursor_vector(void) {}
+
+	datacur_cursor_vector(size_t sz) {}
+
+	const DataBase& operator[](int n) const {
+		return this->data[betweens(0, n, this->data.size())];
+	}
 
 #if 1 /* std::vector準拠関連 */
 
-	const DataBase& at(size_t n) const;
-	void clear(void);
-	bool empty(void) const;
-	size_t size(void) const;
-	void push_back(DataBase val);
-	void pop_back(void);
+	const DataBase& at(size_t n) const {
+		return this->data[betweens(0, n, this->data.size() - 1)];
+	}
+
+	void clear(void) {
+		this->data.clear();
+		this->No = 0;
+	}
+
+	bool empty(void) const {
+		return (this->data.empty());
+	}
+
+	size_t size(void) const {
+		return this->data.size();
+	}
+
+	void push_back(DataBase val) {
+		if (!this->isfull()) {
+			this->data.push_back(val);
+		}
+	}
+
+	void pop_back(void) {
+		this->data.pop_back();
+	}
 
 #endif /* std::vector準拠関連 */
 
-	const DataBase& nowData(void) const;
-	const DataBase& lastData(void) const;
-	bool isfull(void) const;
-	void stepNo(void);
-	void backNo(void);
-	void resetNo(void);
-	size_t nowNo(void) const;
+	const DataBase& nowData(void) const {
+		return this->data[betweens(0, this->No, this->data.size() - 1)];
+	}
+
+	const DataBase& lastData(void) const {
+		return this->data[this->data.size() - 1];
+	}
+
+	bool isfull(void) const {
+		return (this->limit_size <= this->data.size());
+	}
+
+	void stepNo(void) {
+		if (this->No < this->limit_size) {
+			this->No++;
+		}
+	}
+
+	void backNo(void) {
+		if (0 < this->No) {
+			this->No--;
+		}
+	}
+
+	void resetNo(void) {
+		this->No = 0;
+	}
+
+	size_t nowNo(void) const {
+		return this->No;
+	}
 };
