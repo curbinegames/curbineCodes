@@ -1,11 +1,45 @@
 #pragma once
 
 #include <stdint.h>
-#include <vector>
-#include <string>
 #include <type_traits>
+#include <stack>
+#include <string>
+#include <vector>
 
 #define MAX_CONTAIN_SIZE 1000000 /* 一度に読み書きするファイルの上限。バイト単位 */
+
+template<typename T>
+std::vector<T> CopyStackToVector(const std::stack<T> &src) {
+    size_t data_count = src.size();
+    std::stack<T> buf = src;
+    std::vector<T> ret(data_count);
+    for (size_t i = 0; i < data_count; i++) {
+        ret[data_count - i - 1] = buf.top();
+        buf.pop();
+    }
+    return ret;
+}
+
+template<typename T>
+std::vector<T> MoveStackToVector(std::stack<T> &src) {
+    size_t data_count = src.size();
+    std::vector<T> ret(data_count);
+    for (size_t i = 0; i < data_count; i++) {
+        ret[data_count - i - 1] = std::move(src.top());
+        src.pop();
+    }
+    return ret;
+}
+
+template<typename T>
+std::stack<T> CopyVectorToStack(const std::vector<T> &src) {
+    size_t data_count = src.size();
+    std::stack<T> ret;
+    for (size_t i = 0; i < data_count; i++) {
+        ret.push(src[i]);
+    }
+    return ret;
+}
 
 /**
  * vectorをファイルに読み書きする関数群。
@@ -142,3 +176,19 @@ bool WriteFileForString(const std::string &Buffer, FILE *Stream) {
 }
 
 #endif /* ファイルで std::string を扱う関連 */
+
+template<typename T>
+bool ReadFileForStack(std::stack<T> &Buffer, FILE *Stream) {
+    if (Stream == nullptr) { return false; } /* ファイル有効チェック */
+    std::vector<T> buf;
+    if (ReadFileForVector(buf, Stream) == false) { return false; }
+    /* vector -> stack */
+    return true;
+}
+
+template<typename T>
+bool WriteFileForStack(const std::stack<T> &Buffer, FILE *Stream) {
+    if (Stream == nullptr) { return false; } /* ファイル有効チェック */
+    std::vector<T> buf = CopyStackToVector(Buffer);
+    return WriteFileForVector(buf, Stream);
+}
