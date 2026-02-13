@@ -27,6 +27,8 @@
 typedef unsigned int DxColor_t; /* DXライブラリの色情報であることを示す型。unsigned int型 */
 typedef int DxPic_t; /* DXライブラリのグラフィックのハンドルであることを示す型。int型 */
 typedef int DxSnd_t; /* DXライブラリのサウンドのハンドルであることを示す型。int型 */
+typedef int Dx3Dobj_t; /* DXライブラリの3Dモデルのハンドルであることを示す型。int型 */
+typedef int Dx3Danim_t; /* DXライブラリの3Dアニメーションのハンドルであることを示す型。int型 */
 typedef int DxFile_t; /* DXライブラリのファイルのハンドルであることを示す型。int型 */
 typedef int DxTime_t; /* DXライブラリのGetNowCount()等で取得した時間であることを示す型。int型 */
 
