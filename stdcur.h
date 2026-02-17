@@ -100,7 +100,7 @@ bool WriteFileForVector(const std::vector<T> &Buffer, FILE *Stream) {
         write_count = 0;
     }
     else {
-        if (std::numeric_limits<uint32_t>::max() < Buffer.size()) { return false; } /* 書き込みサイズチェック */
+        if (UINT32_MAX < Buffer.size()) { return false; } /* 書き込みサイズチェック */
         if (MAX_CONTAIN_SIZE / sizeof(T) < Buffer.size()) { return false; } /* 書き込みサイズチェック */
 
         data_count = (uint32_t)Buffer.size();
@@ -137,10 +137,14 @@ bool ReadFileForString(std::string &Buffer, FILE *Stream) {
         return true;
     }
     else {
-        if (MAX_CONTAIN_SIZE < data_len) { return false; } /* 読み込みサイズチェック */
+        // if (MAX_CONTAIN_SIZE < data_len) { return false; } /* 読み込みサイズチェック */
+        if (255 < data_len) { return false; } /* 読み込みサイズチェック */
 
-        std::string read_buf(data_len, '\0');
-        read_count = fread(read_buf.data(), 1, data_len, Stream);
+        std::string read_buf;
+        char chrbuf[256];
+        memset(chrbuf, 0, sizeof(chrbuf));
+        read_count = fread(chrbuf, 1, data_len, Stream);
+        read_buf = chrbuf;
         if (read_count != data_len) { return false; } /* 読み込み成功チェック */
         Buffer = read_buf;
     }
@@ -165,7 +169,7 @@ bool WriteFileForString(const std::string &Buffer, FILE *Stream) {
         write_count = 0;
     }
     else {
-        if (std::numeric_limits<uint32_t>::max() < Buffer.size()) { return false; } /* 書き込みサイズチェック */
+        if (UINT32_MAX < Buffer.size()) { return false; } /* 書き込みサイズチェック */
         if (MAX_CONTAIN_SIZE < Buffer.size()) { return false; } /* 書き込みサイズチェック */
 
         data_len = (uint32_t)Buffer.size();
