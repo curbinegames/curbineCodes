@@ -185,7 +185,7 @@ template<typename T>
 bool ReadFileForStack(std::stack<T> &Buffer, FILE *Stream) {
     if (Stream == nullptr) { return false; } /* ファイル有効チェック */
     std::vector<T> buf;
-    if (ReadFileForVector(buf, Stream) == false) { return false; }
+    if (ReadFileForVector<T>(buf, Stream) == false) { return false; }
     /* vector -> stack */
     return true;
 }
@@ -194,5 +194,5 @@ template<typename T>
 bool WriteFileForStack(const std::stack<T> &Buffer, FILE *Stream) {
     if (Stream == nullptr) { return false; } /* ファイル有効チェック */
     std::vector<T> buf = CopyStackToVector(Buffer);
-    return WriteFileForVector(buf, Stream);
+    return WriteFileForVector<T>(buf, Stream);
 }
