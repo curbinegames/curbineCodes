@@ -8,6 +8,8 @@
 
 #define MAX_CONTAIN_SIZE 1000000 /* 一度に読み書きするファイルの上限。バイト単位 */
 
+#if 1 /* stack <--> vector */
+
 template<typename T>
 std::vector<T> CopyStackToVector(const std::stack<T> &src) {
     size_t data_count = src.size();
@@ -39,6 +41,16 @@ std::stack<T> CopyVectorToStack(const std::vector<T> &src) {
         ret.push(src[i]);
     }
     return ret;
+}
+
+#endif /* stack <--> vector */
+
+std::vector<char> CopyStringToVector(const std::string &src) {
+    return { src.begin(), src.end() };
+}
+
+std::string CopyVectorToString(const std::vector<char> &src) {
+    return std::string(src.begin(), src.end());
 }
 
 /**
@@ -127,27 +139,9 @@ bool WriteFileForVector(const std::vector<T> &Buffer, FILE *Stream) {
  */
 bool ReadFileForString(std::string &Buffer, FILE *Stream) {
     if (Stream == nullptr) { return false; } /* ファイル有効チェック */
-
-    uint32_t data_len = 0;
-    size_t read_count = 0;
-
-    if (fread(&data_len, sizeof(uint32_t), 1, Stream) != 1) { return false; }
-    if (data_len == 0) { /* 読み込むデータなし */
-        Buffer.clear();
-        return true;
-    }
-    else {
-        // if (MAX_CONTAIN_SIZE < data_len) { return false; } /* 読み込みサイズチェック */
-        if (255 < data_len) { return false; } /* 読み込みサイズチェック */
-
-        std::string read_buf;
-        char chrbuf[256];
-        memset(chrbuf, 0, sizeof(chrbuf));
-        read_count = fread(chrbuf, 1, data_len, Stream);
-        read_buf = chrbuf;
-        if (read_count != data_len) { return false; } /* 読み込み成功チェック */
-        Buffer = read_buf;
-    }
+    std::vector<char> buf;
+    if (ReadFileForVector<char>(buf, Stream) == false) { return false; }
+    Buffer = CopyVectorToString(buf);
     return true;
 }
 
