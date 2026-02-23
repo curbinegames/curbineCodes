@@ -56,7 +56,15 @@ dxcur_divpic_c::dxcur_divpic_c(const TCHAR *path, int AllNum, int XNum, int YNum
 	DeleteGraph(buf);
 	XSize /= XNum;
 	YSize /= YNum;
-	dxcur_divpic_c(path, AllNum, XNum, YNum, XSize, YSize);
+
+	{
+		DxPic_t *mem = (DxPic_t *)malloc(sizeof(DxPic_t) * AllNum);
+		if (mem == NULL) { return; }
+		LoadDivGraph(path, AllNum, XNum, YNum, XSize, YSize, mem);
+		for (size_t i = 0; i < AllNum; i++) { this->pic[i] = mem[i]; }
+		free(mem);
+		this->usable = true;
+	}
 }
 
 dxcur_divpic_c::dxcur_divpic_c(const TCHAR *path, int AllNum, int XNum, int YNum, int XSize, int YSize)
@@ -95,8 +103,8 @@ dxcur_divpic_c::~dxcur_divpic_c() {
 
 DxPic_t dxcur_divpic_c::handle(size_t n) const {
 	if (!this->usable) { return DXLIB_PIC_NULL; }
-	if (n < 0) { this->pic[0]; }
-	if (this->pic.size() <= n) { this->pic[this->pic.size() - 1]; }
+	if (n < 0) { return this->pic[0]; }
+	if (this->pic.size() <= n) { return this->pic[this->pic.size() - 1]; }
 	return this->pic[n];
 }
 
