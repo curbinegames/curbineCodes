@@ -14,7 +14,7 @@ private:
 public:
 	datacur_cursor_vector(void) {}
 
-	datacur_cursor_vector(size_t sz) {}
+	datacur_cursor_vector(size_t sz) : limit_size(sz) {}
 
 	const DataBase& operator[](int n) const {
 		return this->data[betweens(0, n, this->data.size())];
@@ -51,34 +51,46 @@ public:
 
 #endif /* std::vector準拠関連 */
 
+	/* 今Noが差しているデータを取得する */
 	const DataBase& nowData(void) const {
 		return this->data[betweens(0, this->No, this->data.size() - 1)];
 	}
 
+	/* 今のNoからn個分ずれた先のデータを取得する */
+	const DataBase& offsetData(int n) const {
+		return this->data[betweens(0, this->No + n, this->data.size() - 1)];
+	}
+
+	/* 最後のデータを取得する */
 	const DataBase& lastData(void) const {
 		return this->data[this->data.size() - 1];
 	}
 
+	/* データ数が上限に達したかを取得する */
 	bool isfull(void) const {
 		return (this->limit_size <= this->data.size());
 	}
 
+	/* Noを一つ進める */
 	void stepNo(void) {
 		if (this->No < this->limit_size) {
 			this->No++;
 		}
 	}
 
+	/* Noを一つ戻す */
 	void backNo(void) {
 		if (0 < this->No) {
 			this->No--;
 		}
 	}
 
+	/* Noを0にする */
 	void resetNo(void) {
 		this->No = 0;
 	}
 
+	/* 今のNoを取得する */
 	size_t nowNo(void) const {
 		return this->No;
 	}

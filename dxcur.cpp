@@ -332,29 +332,6 @@ void AvoidKeyRush() {
 }
 
 /**
- * 指定されたキーの状態を返す
- * @return 0: 押していない, 1: たった今押された, 2以上: 長押ししている
- */
-int GetKeyHold(int n) {
-	return keyhold[n];
-}
-
-/**
- * たった今押したキーを1個だけ返す。同時押しには対応していない
- * @return たった今押したキー
- * @note この関数を使用する前に、InputAllKeyHoldでキー情報を更新してください
- * @note InputAllKeyHoldを使用しないと、前回と同じ値が返ります
- */
-int GetKeyPushOnce() {
-	for (int i = 0; i < 256; i++) {
-		if (keyhold[i] == 1) {
-			return i;
-		}
-	}
-	return -1;
-}
-
-/**
  * キー情報を更新する
  * @return なし
  */
@@ -370,6 +347,30 @@ void InputAllKeyHold() {
 		}
 	}
 	return;
+}
+
+/**
+ * 指定されたキーの状態を返す
+ * @return 0: 押していない, 1: たった今押された, 2以上: 長押ししている
+ */
+int GetKeyHold(int n) {
+	return keyhold[n];
+}
+
+/**
+ * たった今押したキーを1個だけ返す。同時押しには対応していない
+ * @return たった今押したキー
+ * @note この関数を使用する前に、InputAllKeyHoldでキー情報を更新してください
+ * @note InputAllKeyHoldを使用しないと、前回と同じ値が返ります
+ */
+int GetKeyPushOnce(bool update_fg) {
+	if (update_fg) { InputAllKeyHold(); }
+	for (int i = 0; i < 256; i++) {
+		if (keyhold[i] == 1) {
+			return i;
+		}
+	}
+	return -1;
 }
 
 /**

@@ -131,9 +131,9 @@ public:
 extern int GetRandBetween(int min, int max);
 extern int GetMouseKeyCur(int* key, int* posX, int* posY, int* PR);
 extern void AvoidKeyRush();
-extern int GetKeyHold(int n);
-extern int GetKeyPushOnce();
 extern void InputAllKeyHold();
+extern int GetKeyHold(int n);
+extern int GetKeyPushOnce(bool update_fg = false);
 extern void AvoidKeyBug();
 extern int keycur(int const* const mat, int num);
 extern void DrawLineCurveDiv(int x1, int y1, int x2, int y2, char mode, intx100_t start,
