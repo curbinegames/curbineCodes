@@ -3,6 +3,7 @@
 #include <vector>
 
 #include <sancur.h>
+#include <stdcur.h>
 
 template<typename DataBase>
 class datacur_cursor_vector {
@@ -93,5 +94,20 @@ public:
 	/* 今のNoを取得する */
 	size_t nowNo(void) const {
 		return this->No;
+	}
+
+	/* 今のNoが終端に達しているかを取得する */
+	bool isEndNo(void) const {
+		return ((this->No + 1) == this->data.size());
+	}
+
+	/* ファイルから情報を読み込む */
+	bool fread(FILE *fp) {
+		return ReadFileForVector<DataBase>(this->data, fp);
+	}
+
+	/* ファイルに情報を書き込む */
+	bool fwrite(FILE *fp) const {
+		return WriteFileForVector<DataBase>(this->data, fp);
 	}
 };
