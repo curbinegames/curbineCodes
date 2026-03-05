@@ -7,7 +7,7 @@
 
 template<typename DataBase>
 class datacur_cursor_vector {
-private:
+protected:
 	std::vector<DataBase>data; /* データベース */
 	size_t limit_size = 2000; /* データ数の上限 */
 	size_t No = 0; /* 今見ているデータ番号 */
@@ -118,7 +118,7 @@ private:
 
 public:
 	datacur_timeline_vector(void) {}
-	datacur_timeline_vector(size_t sz) : datacur_cursor_vector(sz) {}
+	datacur_timeline_vector(size_t sz) : datacur_cursor_vector<DataBase>(sz) {}
 
 	void clear(void) {
 		datacur_cursor_vector<DataBase>::clear();
@@ -126,7 +126,7 @@ public:
 	}
 
 	void push_back(int a_time, DataBase val) {
-		datacur_cursor_vector<DataBase>::push_back();
+		datacur_cursor_vector<DataBase>::push_back(val);
 		if (!this->isfull()) {
 			this->time.push_back(a_time);
 		}
@@ -139,20 +139,20 @@ public:
 
 	/* 時間を見てNoを進める */
 	void stepNoTime(int Ntime) {
-		while (!this->isEndNo() && this->offsetData(1).Stime <= Ntime) { this->stepNo(); }
+		while (!this->isEndNo() && this->time[this->nowNo() + 1] <= Ntime) { this->stepNo(); }
 	}
 
 	/* 時間を見てNoを取得する */
 	size_t searchTime(int Ntime) const {
 		size_t ret = 0;
-		while ((ret + 1) < this->size() && this->at(ret + 1).time <= Ptime) { ret++; }
+		while ((ret + 1) < this->size() && this->time[ret + 1] <= Ntime) { ret++; }
 		return ret;
 	}
 
 	/* 時間を見てNoを取得する。今のNo以降のデータしか見ない */
 	size_t searchTimeFront(int Ntime) const {
 		size_t ret = this->nowNo();
-		while ((ret + 1) < this->size() && this->at(ret + 1).time <= Ptime) { ret++; }
+		while ((ret + 1) < this->size() && this->time[ret + 1] <= Ntime) { ret++; }
 		return ret;
 	}
 
@@ -166,5 +166,21 @@ public:
 	const DataBase& searchDataFront(int Ntime) const {
 		size_t index = this->searchTimeFront(Ntime);
 		return this->data[betweens(0, index, this->data.size() - 1)];
+	}
+
+	/* ファイルから情報を読み込む */
+	bool fread(FILE *fp) {
+		bool ret = false;
+		ret = ReadFileForVector<int>(this->time, fp);
+		if (ret == false) { return false; }
+		return ReadFileForVector<DataBase>(this->data, fp);
+	}
+
+	/* ファイルに情報を書き込む */
+	bool fwrite(FILE *fp) const {
+		bool ret = false;
+		ret = WriteFileForVector<int>(this->time, fp);
+		if (ret == false) { return false; }
+		return WriteFileForVector<DataBase>(this->data, fp);
 	}
 };
