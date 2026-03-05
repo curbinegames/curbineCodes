@@ -47,7 +47,6 @@ void DrawLineAnchor(int left, int up, int right, int down, uint color, dxdraw_an
 		return;
 	}
 
-	/* TODO: À•W•ÏX‚ğ•ÊŠÖ”‚É‚·‚é */
 	switch (anchor) {
 	case DXDRAW_ANCHOR_CENTRE_LEFT:
 	case DXDRAW_ANCHOR_BOTTOM_LEFT:

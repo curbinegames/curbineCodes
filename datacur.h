@@ -9,12 +9,11 @@ template<typename DataBase>
 class datacur_cursor_vector {
 private:
 	std::vector<DataBase>data; /* データベース */
-	const size_t limit_size = 2000; /* データ数の上限 */
+	size_t limit_size = 2000; /* データ数の上限 */
 	size_t No = 0; /* 今見ているデータ番号 */
 
 public:
 	datacur_cursor_vector(void) {}
-
 	datacur_cursor_vector(size_t sz) : limit_size(sz) {}
 
 	const DataBase& operator[](int n) const {
@@ -109,5 +108,63 @@ public:
 	/* ファイルに情報を書き込む */
 	bool fwrite(FILE *fp) const {
 		return WriteFileForVector<DataBase>(this->data, fp);
+	}
+};
+
+template<typename DataBase>
+class datacur_timeline_vector : public datacur_cursor_vector<DataBase> {
+private:
+	std::vector<int>time; /* 基準時間 */
+
+public:
+	datacur_timeline_vector(void) {}
+	datacur_timeline_vector(size_t sz) : datacur_cursor_vector(sz) {}
+
+	void clear(void) {
+		datacur_cursor_vector<DataBase>::clear();
+		this->data.clear();
+	}
+
+	void push_back(int a_time, DataBase val) {
+		datacur_cursor_vector<DataBase>::push_back();
+		if (!this->isfull()) {
+			this->time.push_back(a_time);
+		}
+	}
+
+	void pop_back(void) {
+		datacur_cursor_vector<DataBase>::pop_back();
+		this->time.pop_back();
+	}
+
+	/* 時間を見てNoを進める */
+	void stepNoTime(int Ntime) {
+		while (!this->isEndNo() && this->offsetData(1).Stime <= Ntime) { this->stepNo(); }
+	}
+
+	/* 時間を見てNoを取得する */
+	size_t searchTime(int Ntime) const {
+		size_t ret = 0;
+		while ((ret + 1) < this->size() && this->at(ret + 1).time <= Ptime) { ret++; }
+		return ret;
+	}
+
+	/* 時間を見てNoを取得する。今のNo以降のデータしか見ない */
+	size_t searchTimeFront(int Ntime) const {
+		size_t ret = this->nowNo();
+		while ((ret + 1) < this->size() && this->at(ret + 1).time <= Ptime) { ret++; }
+		return ret;
+	}
+
+	/* 時間を見てデータを取得する */
+	const DataBase& searchData(int Ntime) const {
+		size_t index = this->searchTime(Ntime);
+		return this->data[betweens(0, index, this->data.size() - 1)];
+	}
+
+	/* 時間を見てデータを取得する。今のNo以降のデータしか見ない */
+	const DataBase& searchDataFront(int Ntime) const {
+		size_t index = this->searchTimeFront(Ntime);
+		return this->data[betweens(0, index, this->data.size() - 1)];
 	}
 };
