@@ -88,3 +88,67 @@ bool WriteFileForString(const std::string &Buffer, FILE *Stream) {
 }
 
 #endif /* ファイルで std::string を扱う関連 */
+
+/**
+ * @brief ReadFileForVectorのstd::vector<bool>版
+ * @param Buffer 保存先
+ * @param Stream ファイルポインタ
+ * @return bool 成功判定
+ */
+template<>
+bool ReadFileForVector<bool>(std::vector<bool> &Buffer, FILE *Stream) {
+    if (Stream == nullptr) { return false; } /* ファイル有効チェック */
+
+    uint32_t data_count = 0;
+    size_t read_count = 0;
+
+    if (fread(&data_count, sizeof(uint32_t), 1, Stream) != 1) { return false; }
+    if (data_count == 0) { /* 読み込むデータなし */
+        Buffer.clear();
+        return true;
+    }
+    else {
+        if (MAX_CONTAIN_SIZE / sizeof(bool) < data_count) { return false; } /* 読み込みサイズチェック */
+
+        std::vector<bool> read_buf;
+        read_buf.reserve(data_count);
+        for (uint32_t i = 0; i < data_count; i++) {
+            bool bool_buf;
+            if (fread(&bool_buf, sizeof(bool), 1, Stream) != 1) { return false; }
+            read_buf.push_back(bool_buf);
+        }
+        Buffer.swap(read_buf);
+    }
+    return true;
+}
+
+/**
+ * @brief WriteFileForVectorのstd::vector<bool>版
+ * @param Buffer 保存するデータ
+ * @param Stream ファイルポインタ
+ * @return bool 成功判定
+ */
+template<>
+bool WriteFileForVector<bool>(const std::vector<bool> &Buffer, FILE *Stream) {
+    if (Stream == nullptr) { return false; } /* ファイル有効チェック */
+
+    uint32_t data_count = 0;
+    size_t write_count = 0;
+
+    if (Buffer.size() == 0) { /* "0" だけ書いて終わり */
+        data_count = 0;
+        if (fwrite(&data_count, sizeof(uint32_t), 1, Stream) != 1) { return false; }
+        write_count = 0;
+    }
+    else {
+        if (UINT32_MAX < Buffer.size()) { return false; } /* 書き込みサイズチェック */
+        if (MAX_CONTAIN_SIZE / sizeof(bool) < Buffer.size()) { return false; } /* 書き込みサイズチェック */
+
+        data_count = (uint32_t)Buffer.size();
+        if (fwrite(&data_count, sizeof(uint32_t), 1, Stream) != 1) { return false; }
+        for (bool v : Buffer) {
+            if (fwrite(&v, sizeof(bool), 1, Stream) != 1) { return false; }
+        }
+    }
+    return true;
+}

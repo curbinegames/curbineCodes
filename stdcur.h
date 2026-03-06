@@ -70,6 +70,7 @@ template<typename T>
 bool ReadFileForVector(std::vector<T> &Buffer, FILE *Stream) {
     if (Stream == nullptr) { return false; } /* ファイル有効チェック */
     if (!std::is_trivially_copyable_v<T>) { return false; } /* コピー可能チェック */
+    static_assert(std::is_trivially_copyable_v<T>, "T must be trivially copyable");
 
     uint32_t data_count = 0;
     size_t read_count = 0;
@@ -91,6 +92,15 @@ bool ReadFileForVector(std::vector<T> &Buffer, FILE *Stream) {
 }
 
 /**
+ * @brief ReadFileForVectorのstd::vector<bool>版
+ * @param Buffer 保存先
+ * @param Stream ファイルポインタ
+ * @return bool 成功判定
+ */
+template<>
+extern bool ReadFileForVector<bool>(std::vector<bool> &Buffer, FILE *Stream);
+
+/**
  * @brief vectorをFILEに書き込む。
  * @tparam T vectorの型
  * @param Buffer 保存するデータ
@@ -101,6 +111,7 @@ template<typename T>
 bool WriteFileForVector(const std::vector<T> &Buffer, FILE *Stream) {
     if (Stream == nullptr) { return false; } /* ファイル有効チェック */
     if (!std::is_trivially_copyable_v<T>) { return false; } /* コピー可能チェック */
+    static_assert(std::is_trivially_copyable_v<T>, "T must be trivially copyable");
 
     uint32_t data_count = 0;
     size_t write_count = 0;
@@ -120,6 +131,15 @@ bool WriteFileForVector(const std::vector<T> &Buffer, FILE *Stream) {
     }
     return (write_count == data_count);
 }
+
+/**
+ * @brief WriteFileForVectorのstd::vector<bool>版
+ * @param Buffer 保存するデータ
+ * @param Stream ファイルポインタ
+ * @return bool 成功判定
+ */
+template<>
+extern bool WriteFileForVector<bool>(const std::vector<bool> &Buffer, FILE *Stream);
 
 #endif /* ファイルで std::vector<any> を扱う関連 */
 
