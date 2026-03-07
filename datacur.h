@@ -137,6 +137,11 @@ public:
 		this->time.pop_back();
 	}
 
+	/* ¡No‚ª·‚µ‚Ä‚¢‚éŠî€ŽžŠÔ‚ðŽæ“¾‚·‚é */
+	int nowDataTime(void) const {
+		return this->time[betweens(0, this->No, this->data.size() - 1)];
+	}
+
 	/* ŽžŠÔ‚ðŒ©‚ÄNo‚ði‚ß‚é */
 	void stepNoTime(int Ntime) {
 		while (!this->isEndNo() && this->time[this->nowNo() + 1] <= Ntime) { this->stepNo(); }
