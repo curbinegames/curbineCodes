@@ -139,7 +139,17 @@ public:
 
 	/* ¡No‚ª·‚µ‚Ä‚¢‚éŠî€ŽžŠÔ‚ðŽæ“¾‚·‚é */
 	int nowDataTime(void) const {
-		return this->time[betweens(0, this->No, this->data.size() - 1)];
+		return this->time[betweens(0, this->No, this->time.size() - 1)];
+	}
+
+	/* ¡‚ÌNo‚©‚çnŒÂ•ª‚¸‚ê‚½æ‚ÌŠî€ŽžŠÔ‚ðŽæ“¾‚·‚é */
+	int offsetDataTime(int n) const {
+		return this->time[betweens(0, this->No + n, this->time.size() - 1)];
+	}
+
+	/* ÅŒã‚ÌŠî€ŽžŠÔ‚ðŽæ“¾‚·‚é */
+	int lastDataTime(void) const {
+		return this->time[this->time.size() - 1];
 	}
 
 	/* ŽžŠÔ‚ðŒ©‚ÄNo‚ði‚ß‚é */
