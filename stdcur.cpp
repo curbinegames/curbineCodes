@@ -1,4 +1,5 @@
 
+#include <tchar.h>
 #include <string>
 #include <vector>
 #include <stdcur.h>
@@ -36,6 +37,10 @@ std::vector<char> CopyStringToVector(const std::string &src) {
 
 std::string CopyVectorToString(const std::vector<char> &src) {
     return std::string(src.begin(), src.end());
+}
+
+tstring CopyVectorToTString(const std::vector<TCHAR> &src) {
+    return tstring(src.begin(), src.end());
 }
 
 /**
@@ -88,6 +93,56 @@ bool WriteFileForString(const std::string &Buffer, FILE *Stream) {
 }
 
 #endif /* ファイルで std::string を扱う関連 */
+
+/**
+ * tstringをファイルに読み書きする関数群。
+ * [tstringの文字数], [文字0], [文字1], [文字2]... という風に書かれる。
+ */
+#if 1 /* ファイルで tstring を扱う関連 */
+
+/**
+* @brief FILEからtstringを読み込む。
+* @param Buffer 保存先
+* @param Stream ファイルポインタ
+* @return bool 成功判定
+*/
+bool ReadFileForTString(tstring &Buffer, FILE *Stream) {
+    if (Stream == nullptr) { return false; } /* ファイル有効チェック */
+    std::vector<TCHAR> buf;
+    if (ReadFileForVector<TCHAR>(buf, Stream) == false) { return false; }
+    Buffer = CopyVectorToTString(buf);
+    return true;
+}
+
+/**
+* @brief tstringをFILEに書き込む。
+* @param Buffer 保存するデータ
+* @param Stream ファイルポインタ
+* @return bool 成功判定
+*/
+bool WriteFileForTString(const tstring &Buffer, FILE *Stream) {
+    if (Stream == nullptr) { return false; } /* ファイル有効チェック */
+
+    uint32_t data_len = 0;
+    size_t write_count = 0;
+
+    if (Buffer.size() == 0) { /* "0" だけ書いて終わり */
+        data_len = 0;
+        if (fwrite(&data_len, sizeof(uint32_t), 1, Stream) != 1) { return false; }
+        write_count = 0;
+    }
+    else {
+        if (UINT32_MAX < Buffer.size()) { return false; } /* 書き込みサイズチェック */
+        if (MAX_CONTAIN_SIZE < Buffer.size()) { return false; } /* 書き込みサイズチェック */
+
+        data_len = (uint32_t)Buffer.size();
+        if (fwrite(&data_len, sizeof(uint32_t), 1, Stream) != 1) { return false; }
+        write_count = fwrite(Buffer.data(), sizeof(TCHAR), data_len, Stream);
+    }
+    return (write_count == data_len);
+}
+
+#endif /* ファイルで tstring を扱う関連 */
 
 /**
  * @brief ReadFileForVectorのstd::vector<bool>版
