@@ -302,6 +302,80 @@ void   cur_camera_c::AddRot (int val)    { this->cam_rot  += val; }
 
 #endif
 
+#if 1 /* dxcur_key_c */
+
+/**
+* キー情報を更新する
+* @return なし
+*/
+void dxcur_key_c::update(void) {
+	char recv[256];
+	DxTime_t Ntime = GetNowCount();
+	GetHitKeyStateAll(recv);
+	for (int i = 0; i < 256; i++) {
+		if (recv[i] == 1) {
+			this->key[i].hold++;
+			this->key[i].rele = 0;
+		}
+		else {
+			this->key[i].hold = 0;
+			this->key[i].rele++;
+		}
+		if (this->key[i].hold == 1) {
+			this->key[i].ptime = Ntime;
+			this->key[i].btime = Ntime + this->hold_time;
+		}
+		else if (this->key[i].rele == 1) {
+			this->key[i].rtime = Ntime;
+		}
+	}
+}
+
+/**
+* 指定されたキーの状態を返す
+* @return -1:たった今離された, 0: 押していない, 1: たった今押された, 2以上: 長押ししている
+*/
+int dxcur_key_c::GetKeyState(uint n) {
+	if (255 < n) { return -1; }
+	if (this->key[n].rele == 1) { return -1; }
+	return this->key[n].hold;
+}
+
+/**
+* たった今押したキーを1個だけ返す。同時押しには対応していない
+* @return たった今押したキー
+*/
+int dxcur_key_c::GetKeyPushOnce(void) {
+	for (int i = 0; i < 256; i++) {
+		if (this->key[i].hold == 1) {
+			return i;
+		}
+	}
+	return -1;
+}
+
+/**
+* 反応したキーを1個だけ返す。同時押しには対応していない
+* @return 反応したキー
+*/
+int dxcur_key_c::GetKeyPulseOnce(void) {
+	DxTime_t Ntime = GetNowCount();
+	for (int i = 0; i < 256; i++) {
+		if (this->key[i].hold == 1) {
+			return i;
+		}
+		if (this->key[i].hold >= 2) {
+			if (this->key[i].btime <= Ntime) {
+				this->key[i].btime = Ntime + this->hold_pulse;
+				return i;
+			}
+		}
+	}
+	return -1;
+}
+
+#endif /* dxcur_key_c */
+
 int GetRandBetween(int min, int max) {
 	return GetRand(max - min) + min;
 	// return rand() % (max - min) + min - 1; /* DxLibを使わないバージョン */

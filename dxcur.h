@@ -128,6 +128,26 @@ public:
 	void   AddRot(int val);
 };
 
+class dxcur_key_c {
+private:
+	struct {
+		uint hold = 2;
+		uint rele = 0;
+		DxTime_t ptime = 0; /* ‘O‰ñ‰Ÿ‚µ‚½ŽžŠÔ */
+		DxTime_t rtime = 0; /* ‘O‰ñ—£‚µ‚½ŽžŠÔ */
+		DxTime_t btime = 0;
+	} key[256];
+
+	DxTime_t hold_time  = 500; /* ’·‰Ÿ‚µ”»’è‚Ü‚Å‚É‚©‚©‚éŽžŠÔ */
+	DxTime_t hold_pulse = 125; /* ’·‰Ÿ‚µ’†‚É”½‰ž‚·‚éŠÔŠu */
+
+public:
+	void update(void);
+	int GetKeyState(uint n);
+	int GetKeyPushOnce(void);
+	int GetKeyPulseOnce(void);
+};
+
 extern int GetRandBetween(int min, int max);
 extern int GetMouseKeyCur(int* key, int* posX, int* posY, int* PR);
 extern void AvoidKeyRush();
