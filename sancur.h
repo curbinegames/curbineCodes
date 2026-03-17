@@ -53,6 +53,7 @@ extern double lins_scale(double x1, double y1, double x2, double y2, double x);
 extern double pals(double x1, double y1, double x2, double y2, double x);
 extern double pals_scale(double x1, double y1, double x2, double y2, double x);
 extern double movecal(int mode, double x1, double y1, double x2, double y2, double x);
+extern double movecal_scale(int mode, double startx, double starty, double endx, double endy, double nowx);
 extern double sanrute(double c);
 extern int    abss(int a, int b);
 extern double sinC(int a);

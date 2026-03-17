@@ -108,6 +108,29 @@ double movecal(int mode, double startx, double starty, double endx, double endy,
 }
 
 /**
+ * mode(1:lin,2:acc,3:dec)に合わせた計算をする。
+ * @param[in] mode 線の種類
+ * @param[in] x1 始点のx座標
+ * @param[in] y1 始点のy座標
+ * @param[in] x2 終点のx座標
+ * @param[in] y2 終点のy座標
+ * @param[in] x 評価する値
+ * @return double 始点(x1,y1)、終点(x2,y2)をmode法で通る線を考えた時のxの値
+ */
+double movecal_scale(int mode, double startx, double starty, double endx, double endy, double nowx) {
+	switch (mode) {
+	case 1:
+		return lins_scale(startx, starty, endx, endy, nowx);
+	case 2:
+		return pals_scale(startx, starty, endx, endy, nowx);
+	case 3:
+		return pals_scale(endx, endy, startx, starty, nowx);
+	default:
+		return 0;
+	}
+}
+
+/**
  * ルートcを返す
  * @param[in] c 評価する値
  * @return double ルート(c)
