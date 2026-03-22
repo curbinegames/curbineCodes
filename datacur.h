@@ -16,8 +16,8 @@ public:
 	datacur_cursor_vector(void) {}
 	datacur_cursor_vector(size_t sz) : limit_size(sz) {}
 
-	const DataBase& operator[](int n) const {
-		return this->data[betweens(0, n, this->data.size() - 1)];
+	const DataBase& operator[](size_t n) const {
+		return this->data [ betweens(0, n, this->data.size() - 1)];
 	}
 
 #if 1 /* std::vector€‹’ŠÖ˜A */
