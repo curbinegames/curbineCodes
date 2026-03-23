@@ -183,6 +183,7 @@ DxSnd_t dxcur_snd_c::handle(void) const {
 
 void dxcur_snd_c::reload(const TCHAR *path) {
 	DeleteSoundMem(this->mat);
+	this->mat = DXLIB_SND_NULL;
 	this->mat = LoadSoundMem(path);
 }
 
