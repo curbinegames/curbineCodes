@@ -184,6 +184,7 @@ public:
 
 	/* ŽžŠÔ‚ðŒ©‚ÄNo‚ði‚ß‚é */
 	void stepNoTime(int Ntime) {
+		if (this->empty()) { return; }
 		while (!this->isEndNo() && this->time[this->nowNo() + 1] <= Ntime) { this->stepNo(); }
 	}
 
