@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <vector>
 
 #include <sancur.h>
@@ -47,6 +48,12 @@ public:
 
 	void pop_back(void) {
 		this->data.pop_back();
+	}
+
+	void insert(size_t i, DataBase val) {
+		if (!this->isfull()) {
+			this->data.insert(this->data.begin() + i, val);
+		}
 	}
 
 #endif /* std::vector€‹’ŠÖ˜A */
@@ -126,8 +133,8 @@ public:
 	}
 
 	void push_back(int a_time, DataBase val) {
-		datacur_cursor_vector<DataBase>::push_back(val);
 		if (!this->isfull()) {
+			datacur_cursor_vector<DataBase>::push_back(val);
 			this->time.push_back(a_time);
 		}
 	}
@@ -135,6 +142,29 @@ public:
 	void pop_back(void) {
 		datacur_cursor_vector<DataBase>::pop_back();
 		this->time.pop_back();
+	}
+
+	/* ŠÔ‡‚É‚È‚é‚æ‚¤‚É‘}“ü‚·‚é */
+	void insert(int a_time, DataBase val) {
+		if (this->isfull()) { return; }
+
+		/* ‚»‚à‚»‚à‹ó‚È‚ç•’Ê‚Épush_back */
+		if (this->empty()) {
+			this->push_back(a_time, val);
+			return;
+		}
+
+		/* ––”ö‚É’Ç‰Á‚³‚ê‚é‚æ‚¤‚È‚çpush_back */
+		if (this->lastDataTime() <= a_time) {
+			this->push_back(a_time, val);
+			return;
+		}
+
+		/* ’Tõ‚µ‚Ä‘}“ü */
+		auto it = std::lower_bound(this->time.begin(), this->time.end(), a_time);
+		size_t idx = std::distance(this->time.begin(), it);
+		datacur_cursor_vector<DataBase>::insert(idx, val);
+		this->time.insert(it, a_time);
 	}
 
 	/* ¡No‚ª·‚µ‚Ä‚¢‚éŠî€ŠÔ‚ğæ“¾‚·‚é */
