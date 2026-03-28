@@ -5,6 +5,7 @@
 #include <tchar.h>
 #include <DxLib.h>
 #include <sancur.h>
+#include <stdcur.h>
 
 #undef PlaySound
 
@@ -48,6 +49,7 @@ public:
 public:
 	DxPic_t handle(void) const;
 	void reload(const TCHAR *path);
+	bool IsValid(void) const;
 };
 
 /* LoadDivGraphŠÖ˜A */
@@ -146,6 +148,58 @@ public:
 	int GetKeyState(uint n);
 	int GetKeyPushOnce(void);
 	int GetKeyPulseOnce(void);
+};
+
+class dxcur_ui_elem_c {
+private:
+	int left  = 0;
+	int up    = 0;
+	int right = 0;
+	int down  = 0;
+	dxcur_pic_c pic;
+
+public:
+	bool box_en = false;
+	DxColor_t box_color = COLOR_WHITE;
+
+	tstring text = _T("");
+	DxColor_t text_color = COLOR_WHITE;
+
+	dxcur_ui_elem_c(void) = default;
+	dxcur_ui_elem_c(int a_left, int a_up, int a_right, int a_down);
+
+	void draw(void) const;
+	void SetPosition(int a_left, int a_up, int a_right, int a_down);
+	void SetPicture(const TCHAR *path);
+	void SetPosByPicture(void);
+	bool IsInArea(int x, int y) const;
+};
+
+class dxcur_mouse_item_c {
+private:
+	int NowMouseX = 0;
+	int NowMouseY = 0;
+	std::vector<dxcur_ui_elem_c> vec;
+
+public:
+	dxcur_mouse_item_c(void);
+	dxcur_ui_elem_c &operator[](size_t n);
+	void AddItem(const dxcur_ui_elem_c &item);
+
+private:
+	int SearchInArea(int x, int y) const;
+
+public:
+	void update(void);
+	void draw(void) const;
+
+private:
+	int GetClickedItemBase(int btn) const;
+
+public:
+	int GetClickedItem(void) const;
+	int GetRightClickedItem(void) const;
+	int GetMouseOveredItem(void) const;
 };
 
 extern int GetRandBetween(int min, int max);

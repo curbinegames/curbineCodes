@@ -3,6 +3,7 @@
 #include <vector>
 #include <DxLib.h>
 #include <sancur.h>
+#include <stdcur.h>
 #include <dxcur.h>
 
 #undef PlaySound
@@ -18,7 +19,7 @@ dxcur_pic_c::dxcur_pic_c(const TCHAR *path) {
 }
 
 dxcur_pic_c::~dxcur_pic_c() {
-	if (this->pic != DXLIB_PIC_NULL) {
+	if (this->IsValid()) {
 		DeleteGraph(this->pic);
 	}
 }
@@ -29,7 +30,12 @@ DxPic_t dxcur_pic_c::handle(void) const {
 
 void dxcur_pic_c::reload(const TCHAR *path) {
 	DeleteGraph(this->pic);
+	this->pic = DXLIB_PIC_NULL;
 	this->pic = LoadGraph(path);
+}
+
+bool dxcur_pic_c::IsValid(void) const {
+	return (this->handle() != DXLIB_PIC_NULL);
 }
 
 #endif /* dxcur_pic_c */
@@ -376,6 +382,103 @@ int dxcur_key_c::GetKeyPulseOnce(void) {
 }
 
 #endif /* dxcur_key_c */
+
+#if 1 /* dxcur_ui_elem_c */
+
+dxcur_ui_elem_c::dxcur_ui_elem_c(int a_left, int a_up, int a_right, int a_down) {
+	this->SetPosition(a_left, a_up, a_right, a_down);
+}
+
+void dxcur_ui_elem_c::draw(void) const {
+	if (this->pic.IsValid()) {
+		DrawExtendGraph(this->left, this->up, this->right, this->down, this->pic.handle(), TRUE);
+	}
+	if (box_en) {
+		DrawBox(this->left, this->up, this->right, this->down, box_color, FALSE);
+	}
+	if (!this->text.empty()) {
+		DrawString(this->left, this->up, this->text.c_str(), text_color);
+	}
+}
+
+void dxcur_ui_elem_c::SetPosition(int a_left, int a_up, int a_right, int a_down) {
+	this->left  = min(a_left, a_right);
+	this->right = max(a_left, a_right);
+	this->up    = min(a_up,   a_down );
+	this->down  = max(a_up,   a_down );
+}
+
+void dxcur_ui_elem_c::SetPicture(const TCHAR *path) { this->pic.reload(path); }
+
+void dxcur_ui_elem_c::SetPosByPicture(void) {
+	if (!this->pic.IsValid()) { return; }
+	int sizeX = 0;
+	int sizeY = 0;
+	if (GetGraphSize(this->pic.handle(), &sizeX, &sizeY) == -1) { return; }
+	this->right = this->left + sizeX;
+	this->down  = this->up   + sizeY;
+}
+
+bool dxcur_ui_elem_c::IsInArea(int x, int y) const {
+	return (this->left <= x && x <= this->right && this->up <= y && y <= this->down);
+}
+
+#endif /* dxcur_ui_elem_c */
+
+#if 1 /* dxcur_mouse_item_c */
+
+dxcur_mouse_item_c::dxcur_mouse_item_c(void) {
+	GetMousePoint(&this->NowMouseX, &this->NowMouseY);
+}
+
+dxcur_ui_elem_c &dxcur_mouse_item_c::operator[](size_t n) {
+	return this->vec[n];
+}
+
+void dxcur_mouse_item_c::AddItem(const dxcur_ui_elem_c &item) {
+	this->vec.push_back(item);
+}
+
+int dxcur_mouse_item_c::SearchInArea(int x, int y) const {
+	for (size_t i = 0; i < vec.size(); i++) {
+		if (vec[i].IsInArea(x, y)) { return i; }
+	}
+	return -1;
+}
+
+void dxcur_mouse_item_c::update(void) {
+	GetMousePoint(&this->NowMouseX, &this->NowMouseY);
+}
+
+void dxcur_mouse_item_c::draw(void) const {
+	for (size_t i = 0; i < vec.size(); i++) { vec[i].draw(); }
+}
+
+int dxcur_mouse_item_c::GetClickedItemBase(int btn) const {
+	int mouseBtn = 0;
+	int mouseX   = 0;
+	int mouseY   = 0;
+	int mouseAct = 0;
+	if (GetMouseInputLog2(&mouseBtn, &mouseX, &mouseY, &mouseAct, true) == -1) {
+		return -1;
+	}
+	if (mouseBtn != btn || mouseAct != MOUSE_INPUT_LOG_DOWN) { return -1; }
+	return this->SearchInArea(mouseX, mouseY);
+}
+
+int dxcur_mouse_item_c::GetClickedItem(void) const {
+	return this->GetClickedItemBase(MOUSE_INPUT_LEFT);
+}
+
+int dxcur_mouse_item_c::GetRightClickedItem(void) const {
+	return this->GetClickedItemBase(MOUSE_INPUT_RIGHT);
+}
+
+int dxcur_mouse_item_c::GetMouseOveredItem(void) const {
+	return this->SearchInArea(this->NowMouseX, this->NowMouseY);
+}
+
+#endif /* dxcur_mouse_item_c */
 
 int GetRandBetween(int min, int max) {
 	return GetRand(max - min) + min;
