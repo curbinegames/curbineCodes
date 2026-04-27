@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cmath>
 #include <vector>
 #include <DxLib.h>
 #include <sancur.h>
@@ -195,119 +196,133 @@ void dxcur_snd_c::reload(const TCHAR *path) {
 
 #endif /* dxcur_snd_c */
 
-#if 1 /* cur_camera_c */
+#if 1 /* dxcur_camera_c */
 
-void cur_camera_c::CalDrawPos(int *x, int *y) const {
-	int bufx = *x;
-	int bufy = *y;
-
-	bufx = bufx - this->cam_xpos;
-	bufy = bufy - this->cam_ypos;
-
-	rot_xy_pos(this->cam_rot, &bufx, &bufy);
-
-	*x = bufx * this->cam_zoom + this->cam_xpos;
-	*y = bufy * this->cam_zoom + this->cam_ypos;
+dxcur_camera_c::dxcur_camera_c(void) {
+	this->updateWindowSize();
 }
 
-cur_camera_c::cur_camera_c(void) {
-	GetScreenSize(&this->ScXsize, &this->ScYsize);
+void dxcur_camera_c::rot_xy_pos(double &x, double &y, double rot) const {
+	double bx = x;
+	if (!IS_BETWEEN_RIGHT_LESS(0, rot, PI * 2)) {
+		rot = std::fmod(rot, PI * 2);
+	}
+	if (std::abs(rot) < 1e-9) { return; }
+	x =  x * std::cos(rot) - y * std::sin(rot);
+	y = bx * std::sin(rot) + y * std::cos(rot);
+	return;
 }
 
-void cur_camera_c::DrawLineOnCam(int x1, int y1, int x2, int y2, DxColor_t color, uint thick) const {
-	int DrawX  = x1;
-	int DrawY  = y1;
-	int DrawX2 = x2;
-	int DrawY2 = y2;
-	this->CalDrawPos(&DrawX,  &DrawY);
-	this->CalDrawPos(&DrawX2, &DrawY2);
-	DrawLine(DrawX, DrawY, DrawX2, DrawY2, color, thick);
+void dxcur_camera_c::WorldToScreen(double &x, double &y) const {
+	/* ˆÊ’u */
+	x -= this->xpos;
+	y -= this->ypos;
+	/* ’†‰›•â³ */
+	x -= this->window_sizeX / 2;
+	y -= this->window_sizeY / 2;
+	/* Šg‘å */
+	x *= this->zoom;
+	y *= this->zoom;
+	/* ‰ñ“] */
+	this->rot_xy_pos(x, y, -(this->rot));
+	/* ’†‰›•â³‰ðœ */
+	x += this->window_sizeX / 2;
+	y += this->window_sizeY / 2;
 }
 
-void cur_camera_c::DrawLineCurveOnCam(int x1, int y1, int x2, int y2, int mode, unsigned int color, int thick) const {
-	int DrawX  = x1;
-	int DrawY  = y1;
-	int DrawX2 = x2;
-	int DrawY2 = y2;
-	this->CalDrawPos(&DrawX,  &DrawY);
-	this->CalDrawPos(&DrawX2, &DrawY2);
-	DrawLineCurve(DrawX, DrawY, DrawX2, DrawY2, mode, color, thick);
+void dxcur_camera_c::ScreenToWorld(double &x, double &y) const {
+	/* ’†‰›•â³ */
+	x -= this->window_sizeX / 2;
+	y -= this->window_sizeY / 2;
+	/* ‰ñ“] */
+	this->rot_xy_pos(x, y, this->rot);
+	/* Šg‘å */
+	x = DIV_AVOID_ZERO(x, this->zoom, 0);
+	y = DIV_AVOID_ZERO(y, this->zoom, 0);
+	/* ’†‰›•â³‰ðœ */
+	x += this->window_sizeX / 2;
+	y += this->window_sizeY / 2;
+	/* ˆÊ’u */
+	x += this->xpos;
+	y += this->ypos;
 }
 
-void cur_camera_c::DrawStringOnCam(int x, int y, const TCHAR *str, DxColor_t cr) const {
-	int DrawX = x;
-	int DrawY = y;
-	this->CalDrawPos(&DrawX, &DrawY);
-	DrawString(DrawX, DrawY, str, cr);
+void dxcur_camera_c::reset(void) {
+	this->xpos = 0;
+	this->ypos = 0;
+	this->zoom = 1.0;
+	this->rot  = 0.0;
 }
 
-void cur_camera_c::DrawGraphOnCam(int x, int y, DxPic_t pic) const {
-	int DrawX  = x;
-	int DrawY  = y;
-	int DrawX2 = x;
-	int DrawY2 = y;
-	int sizeX  = 0;
-	int sizeY  = 0;
-	GetGraphSize(pic, &sizeX, &sizeY);
-	DrawX2 = x + sizeX;
-	DrawY2 = y + sizeY;
-	this->CalDrawPos(&DrawX,  &DrawY);
-	this->CalDrawPos(&DrawX2, &DrawY2);
-	DrawExtendGraph(DrawX, DrawY, DrawX2, DrawY2, pic, TRUE);
+void dxcur_camera_c::updateWindowSize(void) {
+	int cr;
+	GetScreenState(&this->window_sizeX, &this->window_sizeY, &cr);
 }
 
-void cur_camera_c::DrawTurnGraphOnCam(int x, int y, DxPic_t pic) const {
-	int DrawX  = x;
-	int DrawY  = y;
-	int DrawX2 = x;
-	int DrawY2 = y;
-	int sizeX  = 0;
-	int sizeY  = 0;
-	GetGraphSize(pic, &sizeX, &sizeY);
-	DrawX2 = x + sizeX;
-	DrawY2 = y + sizeY;
-	this->CalDrawPos(&DrawX,  &DrawY);
-	this->CalDrawPos(&DrawX2, &DrawY2);
-	DrawExtendGraph(DrawX2, DrawY, DrawX, DrawY2, pic, TRUE);
+void dxcur_camera_c::drawpic(double x, double y, DxPic_t pic) const {
+	double DrawX = x;
+	double DrawY = y;
+	this->WorldToScreen(DrawX, DrawY);
+	DrawRotaGraph2(DrawX, DrawY, 0, 0, this->zoom, -(this->rot), pic, TRUE, FALSE);
 }
 
-void cur_camera_c::DrawDeformationPicOnCam(int x, int y, double size, int rot, int alpha, DxPic_t pic) {
-	int DrawX = x;
-	int DrawY = y;
-	this->CalDrawPos(&DrawX, &DrawY);
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
-	DrawDeformationPic(DrawX, DrawY, size * this->cam_zoom, size * this->cam_zoom, rot, pic);
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255);
+void dxcur_camera_c::drawpicTurn(double x, double y, DxPic_t pic) const {
+	double DrawX = x;
+	double DrawY = y;
+	this->WorldToScreen(DrawX, DrawY);
+	DrawRotaGraph2(DrawX, DrawY, 0, 0, this->zoom, -(this->rot), pic, TRUE, TRUE);
 }
 
-int cur_camera_c::GetXPosOnCam(int x, int y) const {
-	int bufX = x;
-	int bufY = y;
-	this->CalDrawPos(&bufX, &bufY);
-	return bufX;
+void dxcur_camera_c::setX(int x) {
+	this->xpos = x;
 }
 
-int cur_camera_c::GetYPosOnCam(int x, int y) const {
-	int bufX = x;
-	int bufY = y;
-	this->CalDrawPos(&bufX, &bufY);
-	return bufY;
+void dxcur_camera_c::setY(int y) {
+	this->ypos = y;
 }
 
-int    cur_camera_c::GetXPos(void) const { return this->cam_xpos; }
-void   cur_camera_c::SetXPos(int val)    { this->cam_xpos  = val; }
-void   cur_camera_c::AddXPos(int val)    { this->cam_xpos += val; }
-int    cur_camera_c::GetYPos(void) const { return this->cam_ypos; }
-void   cur_camera_c::SetYPos(int val)    { this->cam_ypos  = val; }
-void   cur_camera_c::AddYPos(int val)    { this->cam_ypos += val; }
-double cur_camera_c::GetZoom(void) const { return this->cam_zoom; }
-void   cur_camera_c::SetZoom(double val) { this->cam_zoom  = val; }
-void   cur_camera_c::AddZoom(double val) { this->cam_zoom *= val; }
-int    cur_camera_c::GetRot (void) const { return this->cam_rot ; }
-void   cur_camera_c::SetRot (int val)    { this->cam_rot   = val; }
-void   cur_camera_c::AddRot (int val)    { this->cam_rot  += val; }
+void dxcur_camera_c::setZoom(double zoom) {
+	if (zoom < 1e-9) { return; }
+	this->zoom = zoom;
+}
 
-#endif
+void dxcur_camera_c::setAngleRad(double angle) {
+	this->rot = angle;
+	if (!IS_BETWEEN_RIGHT_LESS(0, this->rot, PI * 2)) {
+		this->rot = std::fmod(this->rot, PI * 2);
+	}
+	if (this->rot < 0) { this->rot += PI * 2; }
+}
+
+void dxcur_camera_c::setAngleDeg(double angle) {
+	this->rot = angle * PI / 180;
+	if (!IS_BETWEEN_RIGHT_LESS(0, this->rot, PI * 2)) {
+		this->rot = std::fmod(this->rot, PI * 2);
+	}
+	if (this->rot < 0) { this->rot += PI * 2; }
+}
+
+int dxcur_camera_c::getX(void) const {
+	return this->xpos;
+}
+
+int dxcur_camera_c::getY(void) const {
+	return this->ypos;
+}
+
+double dxcur_camera_c::getZoom(void) const {
+	return this->zoom;
+}
+
+double dxcur_camera_c::getAngleRad(void) const {
+	return this->rot;
+}
+
+double dxcur_camera_c::getAngleDeg(void) const {
+	return 180 * this->rot / PI;
+}
+
+#endif /* dxcur_camera_c */
 
 #if 1 /* dxcur_key_c */
 

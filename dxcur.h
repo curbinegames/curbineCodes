@@ -88,46 +88,49 @@ public:
 	void reload(const TCHAR *path);
 };
 
-class cur_camera_c {
+/**
+ * @brief カメラを司るクラス。
+ * @details カメラをx方向に10px動かすと、実際に描画される位置はx方向に-10pxずれる。位置の基準はカメラ左上。
+ * カメラを2倍ズームにすると、描画されるものが2倍に大きくなる。ズームの中心はカメラ中央。
+ * カメラを時計回りに30度回すと、実際に描画されるものは反時計周りに30度回る。回転の中心はカメラ中央。
+ * カメラ位置の計算の順序は、位置->拡大->回転。
+ * ウィンドウサイズを変えたらupdateWindowSize()で更新しないといけない。
+ */
+class dxcur_camera_c {
 private:
-	int cam_xpos = 0;
-	int cam_ypos = 0;
-	double cam_zoom = 1.0;
-	int cam_rot = 0;
-	int ScXsize = 640;
-	int ScYsize = 480;
+	int xpos = 0;
+	int ypos = 0;
 
-private:
-	void CalDrawPos(int *x, int *y) const;
+	double zoom = 1.0;
+	double rot  = 0.0;
 
-public:
-	cur_camera_c(void);
+	int window_sizeX = 640;
+	int window_sizeY = 480;
 
 public:
-	void DrawLineOnCam(int x1, int y1, int x2, int y2, DxColor_t color, uint thick) const;
-	void DrawLineCurveOnCam(int x1, int y1, int x2, int y2, int mode, unsigned int color, int thick) const;
-	void DrawStringOnCam(int x, int y, const TCHAR *str, DxColor_t cr) const;
-	void DrawGraphOnCam(int x, int y, DxPic_t pic) const;
-	void DrawTurnGraphOnCam(int x, int y, DxPic_t pic) const;
-	void DrawDeformationPicOnCam(int x, int y, double size, int rot, int alpha, DxPic_t pic);
+	dxcur_camera_c(void);
 
-public:
-	int GetXPosOnCam(int x, int y) const;
-	int GetYPosOnCam(int x, int y) const;
+	void rot_xy_pos(double &x, double &y, double rot) const;
+	void WorldToScreen(double &x, double &y) const;
+	void ScreenToWorld(double &x, double &y) const;
+	void reset(void);
 
-public:
-	int    GetXPos(void) const;
-	void   SetXPos(int val);
-	void   AddXPos(int val);
-	int    GetYPos(void) const;
-	void   SetYPos(int val);
-	void   AddYPos(int val);
-	double GetZoom(void) const;
-	void   SetZoom(double val);
-	void   AddZoom(double val);
-	int    GetRot(void) const;
-	void   SetRot(int val);
-	void   AddRot(int val);
+	void updateWindowSize(void);
+
+	void drawpic(double x, double y, DxPic_t pic) const;
+	void drawpicTurn(double x, double y, DxPic_t pic) const;
+
+	void setX(int x);
+	void setY(int y);
+	void setZoom(double zoom);
+	void setAngleRad(double angle);
+	void setAngleDeg(double angle);
+
+	int getX(void) const;
+	int getY(void) const;
+	double getZoom(void) const;
+	double getAngleRad(void) const;
+	double getAngleDeg(void) const;
 };
 
 class dxcur_key_c {

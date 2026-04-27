@@ -1,5 +1,9 @@
 #pragma once
 
+#ifndef PI
+#define PI 3.141592653589793
+#endif
+
 /* a/b‚ğ•Ô‚·A‚½‚¾‚µAb‚ª0‚Ì‚Íc‚ğ•Ô‚·B0œZ‰ñ”ğ‚Ìˆ×‚Éì‚Á‚½ */
 #define DIV_AVOID_ZERO(a, b, c) ( ((b) == 0) ? (c) : ((a) / (double)(b)) )
 
