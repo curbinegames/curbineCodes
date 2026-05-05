@@ -102,7 +102,7 @@ private:
 	int ypos = 0;
 
 	double zoom = 1.0;
-	double rot  = 0.0;
+	double rot  = 0.0; /* ’PˆÊ‚Írad */
 
 	int window_sizeX = 640;
 	int window_sizeY = 480;
@@ -119,6 +119,8 @@ public:
 
 	void drawpic(double x, double y, DxPic_t pic) const;
 	void drawpicTurn(double x, double y, DxPic_t pic) const;
+	void drawpicDeformationRad(double x, double y, double size, double rot, DxPic_t pic) const;
+	void drawpicDeformationDeg(double x, double y, double size, double rot, DxPic_t pic) const;
 
 	void setX(int x);
 	void setY(int y);

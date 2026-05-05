@@ -263,7 +263,7 @@ void dxcur_camera_c::drawpic(double x, double y, DxPic_t pic) const {
 	double DrawX = x;
 	double DrawY = y;
 	this->WorldToScreen(DrawX, DrawY);
-	DrawRotaGraph2(DrawX, DrawY, 0, 0, this->zoom, -(this->rot), pic, TRUE, FALSE);
+	DrawRotaGraph2(DrawX, DrawY, 0, 0, this->zoom, -(this->rot), pic, TRUE);
 }
 
 void dxcur_camera_c::drawpicTurn(double x, double y, DxPic_t pic) const {
@@ -271,6 +271,26 @@ void dxcur_camera_c::drawpicTurn(double x, double y, DxPic_t pic) const {
 	double DrawY = y;
 	this->WorldToScreen(DrawX, DrawY);
 	DrawRotaGraph2(DrawX, DrawY, 0, 0, this->zoom, -(this->rot), pic, TRUE, TRUE);
+}
+
+void dxcur_camera_c::drawpicDeformationRad(
+	double x, double y, double size, double rot, DxPic_t pic
+) const {
+	double DrawX = x;
+	double DrawY = y;
+	int psizeX = 1;
+	int psizeY = 1;
+	this->WorldToScreen(DrawX, DrawY);
+	GetGraphSize(pic, &psizeX, &psizeY);
+	DrawRotaGraph2(
+		DrawX, DrawY, psizeX / 2, psizeY / 2, size * this->zoom, rot - (this->rot), pic, TRUE
+	);
+}
+
+void dxcur_camera_c::drawpicDeformationDeg(
+	double x, double y, double size, double rot, DxPic_t pic
+) const {
+	this->drawpicDeformationRad(x, y, size, rot * PI / 180, pic);
 }
 
 void dxcur_camera_c::setX(int x) {
