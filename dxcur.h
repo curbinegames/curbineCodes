@@ -40,11 +40,20 @@ typedef int DxTime_t; /* DXƒ‰ƒCƒuƒ‰ƒŠ‚ÌGetNowCount()“™‚ÅŽæ“¾‚µ‚½ŽžŠÔ‚Å‚ ‚é‚±‚Æ‚ð
 class dxcur_pic_c {
 private:
 	DxPic_t pic = DXLIB_PIC_NULL;
+	tstring path = _T("");
+
+private:
+	void LoadBase(const TCHAR *path);
+	void DeleteBase(void);
 
 public:
 	dxcur_pic_c();
 	dxcur_pic_c(const TCHAR *path);
 	~dxcur_pic_c();
+	dxcur_pic_c(const dxcur_pic_c &obj);
+	dxcur_pic_c &operator=(const dxcur_pic_c &obj);
+	dxcur_pic_c(dxcur_pic_c &&obj) noexcept;
+	dxcur_pic_c &operator=(dxcur_pic_c &&obj) noexcept;
 
 public:
 	DxPic_t handle(void) const;

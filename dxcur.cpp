@@ -13,16 +13,65 @@ static int keyhold[256];
 
 #if 1 /* dxcur_pic_c */
 
+void dxcur_pic_c::LoadBase(const TCHAR *path) {
+	this->pic = LoadGraph(path);
+	if (this->pic != DXLIB_PIC_NULL) {
+		this->path = path;
+	}
+	else {
+		this->path.clear();
+	}
+}
+
+void dxcur_pic_c::DeleteBase(void) {
+	if (this->IsValid()) {
+		DeleteGraph(this->pic);
+		this->pic = DXLIB_PIC_NULL;
+	}
+}
+
 dxcur_pic_c::dxcur_pic_c() {}
 
 dxcur_pic_c::dxcur_pic_c(const TCHAR *path) {
-	this->pic = LoadGraph(path);
+	this->LoadBase(path);
 }
 
 dxcur_pic_c::~dxcur_pic_c() {
-	if (this->IsValid()) {
-		DeleteGraph(this->pic);
+	this->DeleteBase();
+}
+
+dxcur_pic_c::dxcur_pic_c(const dxcur_pic_c &obj) {
+	if (obj.IsValid()) {
+		this->LoadBase(obj.path.c_str());
 	}
+}
+
+dxcur_pic_c &dxcur_pic_c::operator=(const dxcur_pic_c &obj) {
+	if (this != &obj) {
+		this->DeleteBase();
+		if (obj.IsValid()) {
+			this->LoadBase(obj.path.c_str());
+		}
+	}
+	return *this;
+}
+
+dxcur_pic_c::dxcur_pic_c(dxcur_pic_c &&obj) noexcept {
+	this->pic = obj.pic;
+	this->path = std::move(obj.path);
+	obj.pic = DXLIB_PIC_NULL;
+	obj.path.clear();
+}
+
+dxcur_pic_c &dxcur_pic_c::operator=(dxcur_pic_c &&obj) noexcept {
+	if (this != &obj) {
+		this->DeleteBase();
+		this->pic = obj.pic;
+		this->path = std::move(obj.path);
+		obj.pic = DXLIB_PIC_NULL;
+		obj.path.clear();
+	}
+	return *this;
 }
 
 DxPic_t dxcur_pic_c::handle(void) const {
@@ -30,9 +79,8 @@ DxPic_t dxcur_pic_c::handle(void) const {
 }
 
 void dxcur_pic_c::reload(const TCHAR *path) {
-	DeleteGraph(this->pic);
-	this->pic = DXLIB_PIC_NULL;
-	this->pic = LoadGraph(path);
+	this->DeleteBase();
+	this->LoadBase(path);
 }
 
 bool dxcur_pic_c::IsValid(void) const {
