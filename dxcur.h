@@ -45,11 +45,13 @@ private:
 
 private:
 	void LoadBase(const TCHAR *path);
+	void LoadBase(const tstring &path);
 	void DeleteBase(void);
 
 public:
 	dxcur_pic_c();
 	dxcur_pic_c(const TCHAR *path);
+	dxcur_pic_c(const tstring &path);
 	~dxcur_pic_c();
 	dxcur_pic_c(const dxcur_pic_c &obj);
 	dxcur_pic_c &operator=(const dxcur_pic_c &obj);
@@ -59,6 +61,7 @@ public:
 public:
 	DxPic_t handle(void) const;
 	void reload(const TCHAR *path);
+	void reload(const tstring &path);
 	bool IsValid(void) const;
 };
 

@@ -23,6 +23,16 @@ void dxcur_pic_c::LoadBase(const TCHAR *path) {
 	}
 }
 
+void dxcur_pic_c::LoadBase(const tstring &path) {
+	this->pic = LoadGraph(path.c_str());
+	if (this->pic != DXLIB_PIC_NULL) {
+		this->path = path;
+	}
+	else {
+		this->path.clear();
+	}
+}
+
 void dxcur_pic_c::DeleteBase(void) {
 	if (this->IsValid()) {
 		DeleteGraph(this->pic);
@@ -33,6 +43,10 @@ void dxcur_pic_c::DeleteBase(void) {
 dxcur_pic_c::dxcur_pic_c() {}
 
 dxcur_pic_c::dxcur_pic_c(const TCHAR *path) {
+	this->LoadBase(path);
+}
+
+dxcur_pic_c::dxcur_pic_c(const tstring &path) {
 	this->LoadBase(path);
 }
 
@@ -79,6 +93,11 @@ DxPic_t dxcur_pic_c::handle(void) const {
 }
 
 void dxcur_pic_c::reload(const TCHAR *path) {
+	this->DeleteBase();
+	this->LoadBase(path);
+}
+
+void dxcur_pic_c::reload(const tstring &path) {
 	this->DeleteBase();
 	this->LoadBase(path);
 }

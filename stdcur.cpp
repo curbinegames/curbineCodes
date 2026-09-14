@@ -1,4 +1,5 @@
 
+#include <windows.h>
 #include <tchar.h>
 #include <string>
 #include <vector>
@@ -206,4 +207,22 @@ bool WriteFileForVector<bool>(const std::vector<bool> &Buffer, FILE *Stream) {
         }
     }
     return true;
+}
+
+std::wstring string_to_wstring(const std::string &str) {
+    if (str.empty()) { return {}; }
+    size_t size_needed = MultiByteToWideChar(CP_UTF8, 0, str.data(), (int)str.size(), NULL, 0);
+    if (size_needed == 0) { return {}; }
+    std::wstring wstrTo(size_needed, 0);
+    MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, str.data(), (int)str.size(), &wstrTo[0], size_needed);
+    return wstrTo;
+}
+
+std::string wstring_to_string(const std::wstring &wstr) {
+    if (wstr.empty()) { return {}; }
+    size_t size_needed = WideCharToMultiByte(CP_UTF8, 0, wstr.data(), (int)wstr.size(), NULL, 0, NULL, NULL);
+    if (size_needed == 0) { return {}; }
+    std::string strTo(size_needed, 0);
+    WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS, wstr.data(), (int)wstr.size(), &strTo[0], size_needed, NULL, NULL);
+    return strTo;
 }

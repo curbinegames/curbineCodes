@@ -21,6 +21,8 @@ extern bool ReadFileForString(std::string &Buffer, FILE *Stream);
 extern bool WriteFileForString(const std::string &Buffer, FILE *Stream);
 extern bool ReadFileForTString(tstring &Buffer, FILE *Stream);
 extern bool WriteFileForTString(const tstring &Buffer, FILE *Stream);
+extern std::wstring string_to_wstring(const std::string &str);
+extern std::string wstring_to_string(const std::wstring &wstr);
 
 #if 1 /* stack <--> vector */
 
