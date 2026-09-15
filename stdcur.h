@@ -150,6 +150,25 @@ bool WriteFileForVector(const std::vector<T> &Buffer, FILE *Stream) {
 template<>
 extern bool WriteFileForVector<bool>(const std::vector<bool> &Buffer, FILE *Stream);
 
+/**
+ * @brief FILEをvector分だけseekする。
+ * @tparam T vectorの型
+ * @param Stream ファイルポインタ
+ * @return bool 成功判定
+ */
+template<typename T>
+bool SeekFileForVector(FILE *Stream) {
+    if (Stream == nullptr) { return false; } /* ファイル有効チェック */
+    if (!std::is_trivially_copyable_v<T>) { return false; } /* コピー可能チェック */
+    static_assert(std::is_trivially_copyable_v<T>, "T must be trivially copyable");
+    uint32_t data_count = 0;
+    if (fread(&data_count, sizeof(uint32_t), 1, Stream) != 1) { return false; }
+    if (data_count == 0) { return true; } /* 読み込むデータなし */
+    if (MAX_CONTAIN_SIZE / sizeof(T) < data_count) { return false; } /* 読み込みサイズチェック */
+    if (fseek(Stream, sizeof(T) * data_count, SEEK_CUR) != 0) { return false; }
+    return true;
+}
+
 #endif /* ファイルで std::vector<any> を扱う関連 */
 
 template<typename T>
