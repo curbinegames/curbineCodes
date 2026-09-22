@@ -220,6 +220,20 @@ public:
 	int GetMouseOveredItem(void) const;
 };
 
+/**
+ * @brief ウィンドウの枠を描画するクラス。
+ */
+class dxcur_window_pic_c {
+private:
+	dxcur_divpic_c pic;
+
+public:
+	dxcur_window_pic_c(void) = default;
+	dxcur_window_pic_c(const tstring &path);
+	void reload(const tstring &path);
+	void draw(int left, int up, int right, int down) const;
+};
+
 extern int GetRandBetween(int min, int max);
 extern int GetMouseKeyCur(int* key, int* posX, int* posY, int* PR);
 extern void AvoidKeyRush();

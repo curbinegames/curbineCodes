@@ -582,6 +582,55 @@ int dxcur_mouse_item_c::GetMouseOveredItem(void) const {
 
 #endif /* dxcur_mouse_item_c */
 
+#if 1 /* dxcur_window_pic_c */
+
+dxcur_window_pic_c::dxcur_window_pic_c(const tstring &path) {
+	this->reload(path);
+}
+
+void dxcur_window_pic_c::reload(const tstring &path) {
+	this->pic.reload(path.c_str(), 9, 3, 3);
+}
+
+void dxcur_window_pic_c::draw(int left, int up, int right, int down) const {
+	if (!this->pic.handle(0)) { return; }
+	if (right < left) { std::swap(left, right); }
+	if (down < up) { std::swap(up, down); }
+
+	int sizeX = 0;
+	int sizeY = 0;
+	GetGraphSize(this->pic.handle(0), &sizeX, &sizeY);
+	if (sizeX <= 0 || sizeY <= 0) { return; }
+
+	int x1 = left;
+	int x2 = right - sizeX / 3;
+	int y1 = up;
+	int y2 = down - sizeY / 3;
+
+	// 左上
+	DrawExtendGraph(x1            , y1            , x1 + sizeX / 3, y1 + sizeY / 3, this->pic.handle(0), TRUE);
+	// 上
+	DrawExtendGraph(x1 + sizeX / 3, y1            , x2            , y1 + sizeY / 3, this->pic.handle(1), TRUE);
+	// 右上
+	DrawExtendGraph(x2            , y1            , right         , y1 + sizeY / 3, this->pic.handle(2), TRUE);
+	// 左
+	DrawExtendGraph(x1            , y1 + sizeY / 3, x1 + sizeX / 3, y2            , this->pic.handle(3), TRUE);
+	// 中央
+	DrawExtendGraph(x1 + sizeX / 3, y1 + sizeY / 3, x2            , y2            , this->pic.handle(4), TRUE);
+	// 右
+	DrawExtendGraph(x2            , y1 + sizeY / 3, right         , y2            , this->pic.handle(5), TRUE);
+	// 左下
+	DrawExtendGraph(x1            , y2            , x1 + sizeX / 3, down          , this->pic.handle(6), TRUE);
+	// 下
+	DrawExtendGraph(x1 + sizeX / 3, y2            , x2            , down          , this->pic.handle(7), TRUE);
+	// 右下
+	DrawExtendGraph(x2            , y2            , right         , down          , this->pic.handle(8), TRUE);
+
+	return;
+}
+
+#endif /* dxcur_window_pic_c */
+
 int GetRandBetween(int min, int max) {
 	return GetRand(max - min) + min;
 	// return rand() % (max - min) + min - 1; /* DxLibを使わないバージョン */
