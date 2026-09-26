@@ -1,4 +1,5 @@
 
+#include <cmath>
 #include "DxLib.h"
 #include "dxdraw.h"
 #include "dxcur.h"
@@ -390,7 +391,7 @@ static void DrawDeformationPic_Extend(int x, int y, double sizeX, double sizeY, 
 	return;
 }
 
-static void DrawDeformationPic_Rot(int x, int y, double size, int rot, int handle) {
+static void DrawDeformationPic_Rot(int x, int y, double size, double rot, int handle) {
 	int PSizeX = 1;
 	int PSizeY = 1;
 	GetGraphSize(handle, &PSizeX, &PSizeY);
@@ -400,7 +401,7 @@ static void DrawDeformationPic_Rot(int x, int y, double size, int rot, int handl
 	return;
 }
 
-static void DrawDeformationPic_FullDef(int x, int y, double sizeX, double sizeY, int rot, int handle) {
+static void DrawDeformationPic_FullDef(int x, int y, double sizeX, double sizeY, double rot, int handle) {
 	int PSizeX = 1;
 	int PSizeY = 1;
 	GetGraphSize(handle, &PSizeX, &PSizeY);
@@ -410,8 +411,10 @@ static void DrawDeformationPic_FullDef(int x, int y, double sizeX, double sizeY,
 	return;
 }
 
-void DrawDeformationPic(int x, int y, double sizeX, double sizeY, int rot, int handle) {
-	if (rot % 360 == 0) { /* ‰ñ“]‚ª0 */
+void DrawDeformationPic(int x, int y, double sizeX, double sizeY, double rot, int handle) {
+	const double EPS = 1e-12;
+	rot = std::fmod(rot, 360.0);
+	if (std::abs(rot) <= EPS) { /* ‰ñ“]‚ª0 */
 		if (sizeX == 1 && sizeY == 1) { /* Šg‘å—¦‚ª1 */
 			DrawDeformationPic_NoDef(x, y, handle);
 		}

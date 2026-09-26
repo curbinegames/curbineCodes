@@ -31,4 +31,4 @@ extern void DrawStringAnchor(int x, int y, const TCHAR *s, DxColor_t cr, dxdraw_
 extern void DrawStringToHandleAnchor(int x, int y, const TCHAR *s, DxColor_t cr, int handle, dxdraw_anchor_t anchor);
 extern void DrawFormatStringAnchor(int x, int y, DxColor_t cr, dxdraw_anchor_t anchor, const TCHAR *s, ...);
 extern void DrawFormatStringToHandleAnchor(int x, int y, DxColor_t cr, int handle, dxdraw_anchor_t anchor, const TCHAR *s, ...);
-extern void DrawDeformationPic(int x, int y, double sizeX, double sizeY, int rot, int handle);
+extern void DrawDeformationPic(int x, int y, double sizeX, double sizeY, double rot, int handle);
