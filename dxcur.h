@@ -148,9 +148,21 @@ public:
 	double getAngleDeg(void) const;
 };
 
+/**
+ * @brief キーボード入力を管理するクラス。
+ * @details DXライブラリでは、キーを押しているか、押していないかしか分からない。
+ * このクラスでは、キーを押した瞬間、離した瞬間、長押し中などの状態を取得できる。
+ * クラス生成直後に押されていたキーは、押し直さないと反応しないようにしてある。
+ * ・usage
+ * 毎フレームupdate()を呼ぶ。
+ * 押した瞬間のキーはGetKeyPushOnce()で取得する。
+ * 長押しも含めて確認したい場合はGetKeyPulseOnce()で取得する。
+ * 特定のキーの状態を確認したい場合はGetKeyState()で取得する。引数はDxLibのキーコード。
+ */
 class dxcur_key_c {
 private:
 	struct {
+		bool active = false; /* クラス生成した直後の暴発防止 */
 		uint hold = 2;
 		uint rele = 0;
 		DxTime_t ptime = 0; /* 前回押した時間 */

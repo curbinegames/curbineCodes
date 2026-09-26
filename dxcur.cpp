@@ -427,6 +427,7 @@ void dxcur_key_c::update(void) {
 			this->key[i].rele = 0;
 		}
 		else {
+			this->key[i].active = true;
 			this->key[i].hold = 0;
 			this->key[i].rele++;
 		}
@@ -447,6 +448,7 @@ void dxcur_key_c::update(void) {
 int dxcur_key_c::GetKeyState(uint n) {
 	if (255 < n) { return -1; }
 	if (this->key[n].rele == 1) { return -1; }
+	if (this->key[n].active == false) { return 0; }
 	return this->key[n].hold;
 }
 
@@ -456,7 +458,7 @@ int dxcur_key_c::GetKeyState(uint n) {
 */
 int dxcur_key_c::GetKeyPushOnce(void) {
 	for (int i = 0; i < 256; i++) {
-		if (this->key[i].hold == 1) {
+		if (this->key[i].hold == 1 && this->key[i].active) {
 			return i;
 		}
 	}
@@ -470,6 +472,7 @@ int dxcur_key_c::GetKeyPushOnce(void) {
 int dxcur_key_c::GetKeyPulseOnce(void) {
 	DxTime_t Ntime = GetNowCount();
 	for (int i = 0; i < 256; i++) {
+		if (this->key[i].active == false) { continue; }
 		if (this->key[i].hold == 1) {
 			return i;
 		}
