@@ -5,6 +5,7 @@
 #include <DxLib.h>
 #include <sancur.h>
 #include <stdcur.h>
+#include <strcur.h>
 #include <dxcur.h>
 
 #undef PlaySound
@@ -584,6 +585,107 @@ int dxcur_mouse_item_c::GetMouseOveredItem(void) const {
 }
 
 #endif /* dxcur_mouse_item_c */
+
+#if 1 /* dxcur_number_pic_c */
+
+/* x座標は勝手に進むので注意 */
+void dxcur_number_pic_c::DrawNumOnce(int &x, int y, char num, double size) const {
+    num = betweens('0', num, '9');
+    DrawExtendGraph(x, y, x + this->picsizeX * size, y + this->picsizeY * size,
+        this->pic.handle(num - '0'), TRUE);
+    x += this->gapX * size;
+}
+
+/* x座標は勝手に進むので注意 */
+void dxcur_number_pic_c::DrawPoint(int &x, int y, double size) const {
+    DrawExtendGraph(x, y, x + this->picsizeX * size, y + this->picsizeY * size,
+        this->pic.handle(10), TRUE);
+    x += this->pointsizeX * size;
+}
+
+/* x座標は勝手に進むので注意 */
+void dxcur_number_pic_c::DrawPlus(int &x, int y, double size) const {
+    DrawExtendGraph(x, y, x + this->picsizeX * size, y + this->picsizeY * size,
+        this->pic.handle(11), TRUE);
+    x += this->gapX * size;
+}
+
+/* x座標は勝手に進むので注意 */
+void dxcur_number_pic_c::DrawMinus(int &x, int y, double size) const {
+    DrawExtendGraph(x, y, x + this->picsizeX * size, y + this->picsizeY * size,
+        this->pic.handle(12), TRUE);
+    x += this->gapX * size;
+}
+
+uint dxcur_number_pic_c::GetPicSize(uint num, double size) const {
+    uint ret = 0;
+    if (num == 0) { return this->picsizeX * size; }
+    while (num != 0) {
+        ret += this->gapX;
+        num /= 10;
+    }
+    return (uint)(ret * size);
+}
+
+dxcur_number_pic_c::dxcur_number_pic_c(void) {}
+
+dxcur_number_pic_c::dxcur_number_pic_c(const tstring &path) {
+	this->SetPic(path);
+}
+
+void dxcur_number_pic_c::DrawNum(int x, int y, double size, int num, bool sign) const {
+    TCHAR buf[8];
+    int DrawX = x;
+    int DrawY = y;
+    if (num < 0) {
+        this->DrawMinus(DrawX, DrawY, size);
+    }
+    else if (sign){
+        this->DrawPlus(DrawX, DrawY, size);
+    }
+    strnums(buf, num, 8);
+    for (size_t i = 0; buf[i] != '\0'; i++) {
+        this->DrawNumOnce(DrawX, DrawY, buf[i], size);
+    }
+}
+
+void dxcur_number_pic_c::DrawNumRight(int right, int up, double size, uint num, bool sign) const {
+    char buf[8];
+    int DrawX = right - this->GetPicSize(num, size);
+    this->DrawNum(DrawX, up, size, num, sign);
+}
+
+void dxcur_number_pic_c::DrawFloat(int x, int y, double size, double num, uint under, bool sign) const {
+    TCHAR buf[12];
+    int DrawX = x;
+    int DrawY = y;
+    if (num < 0) {
+        this->DrawMinus(DrawX, DrawY, size);
+    }
+    else if (sign){
+        this->DrawPlus(DrawX, DrawY, size);
+    }
+    strnumsD(buf, num, 12, under);
+    for (size_t i = 0; buf[i] != '\0'; i++) {
+        if (buf[i] == '.') {
+            this->DrawPoint(DrawX, DrawY, size);
+        }
+        else {
+            this->DrawNumOnce(DrawX, DrawY, buf[i], size);
+        }
+    }
+}
+
+void dxcur_number_pic_c::SetPic(const tstring &path) {
+	this->pic.reload(path.c_str(), 13, 5, 3);
+	GetGraphSize(this->pic.handle(0), &this->picsizeX, &this->picsizeY);
+	this->pointsizeX = this->picsizeX;
+}
+
+void dxcur_number_pic_c::SetPointSizeX(int val) { this->pointsizeX = val; }
+void dxcur_number_pic_c::SetPicGapAll(int val) { this->gapX = val; }
+
+#endif /* dxcur_number_pic_c */
 
 #if 1 /* dxcur_window_pic_c */
 

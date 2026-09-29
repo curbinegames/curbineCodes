@@ -232,6 +232,34 @@ public:
 	int GetMouseOveredItem(void) const;
 };
 
+class dxcur_number_pic_c {
+private:
+	dxcur_divpic_c pic; /* 0~9=数字, 10=ドット, 11=プラス, 12,マイナス */
+
+	int pointsizeX = 25;
+	int picsizeX = 60;
+	int picsizeY = 86;
+	int gapX = 0;
+
+	void DrawNumOnce(int &x, int y, char num, double size) const;
+	void DrawPoint(int &x, int y, double size) const;
+	void DrawPlus(int &x, int y, double size) const;
+	void DrawMinus(int &x, int y, double size) const;
+	uint GetPicSize(uint num, double size) const;
+
+public:
+	dxcur_number_pic_c(void);
+	dxcur_number_pic_c(const tstring &path);
+
+	void DrawNum(int x, int y, double size, int num, bool sign = false) const;
+	void DrawNumRight(int right, int up, double size, uint num, bool sign = false) const;
+	void DrawFloat(int x, int y, double size, double num, uint under, bool sign = false) const;
+
+	void SetPic(const tstring &path);
+	void SetPointSizeX(int val);
+	void SetPicGapAll(int val);
+};
+
 /**
  * @brief ウィンドウの枠を描画するクラス。
  */
