@@ -254,6 +254,7 @@ public:
 	void DrawNum(int x, int y, double size, int num, bool sign = false) const;
 	void DrawNumRight(int right, int up, double size, uint num, bool sign = false) const;
 	void DrawFloat(int x, int y, double size, double num, uint under, bool sign = false) const;
+	void DrawUnderFloat(int x, int y, double size, double num, uint under) const;
 
 	void SetPic(const tstring &path);
 	void SetPointSizeX(int val);

@@ -676,6 +676,26 @@ void dxcur_number_pic_c::DrawFloat(int x, int y, double size, double num, uint u
     }
 }
 
+void dxcur_number_pic_c::DrawUnderFloat(int x, int y, double size, double num, uint under) const {
+	bool is_under = false;
+    TCHAR buf[12];
+    int DrawX = x;
+    int DrawY = y;
+    if (num < 0) {
+        this->DrawMinus(DrawX, DrawY, size);
+    }
+    strnumsD(buf, num, 12, under);
+    for (size_t i = 0; buf[i] != '\0'; i++) {
+        if (buf[i] == '.') {
+            this->DrawPoint(DrawX, DrawY, size);
+            is_under = true;
+        }
+        else if (is_under) {
+            this->DrawNumOnce(DrawX, DrawY, buf[i], size);
+        }
+    }
+}
+
 void dxcur_number_pic_c::SetPic(const tstring &path) {
 	this->pic.reload(path.c_str(), 13, 5, 3);
 	GetGraphSize(this->pic.handle(0), &this->picsizeX, &this->picsizeY);
