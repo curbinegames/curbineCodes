@@ -2,6 +2,8 @@
 
 #include <cmath>
 #include <vector>
+#include <fstream>
+#include <iterator>
 #include <DxLib.h>
 #include <sancur.h>
 #include <stdcur.h>
@@ -12,10 +14,36 @@
 
 static int keyhold[256];
 
+static bool IsCulkFile(const tstring &filename) {
+	if (filename.empty()) { return false; }
+	size_t pos = filename.find_last_of(_T('.'));
+	if (pos == std::string::npos) { return false; }
+	tstring ext = filename.substr(pos + 1);
+	if (ext == _T("culk")) { return true; }
+	return false;
+}
+
+static std::vector<unsigned char> ReadAllBytes(const tstring &filename) {
+    std::ifstream file(filename, std::ios::binary);
+    if (!file) { return {}; }
+    return std::vector<unsigned char>(std::istreambuf_iterator<char>(file), {});
+}
+
 #if 1 /* dxcur_pic_c */
 
 void dxcur_pic_c::LoadBase(const TCHAR *path) {
-	this->pic = LoadGraph(path);
+	if (IsCulkFile(path)) {
+		std::vector<unsigned char> culk = ReadAllBytes(path);
+		if (!culk.empty()) {
+			for (size_t i = 0; i < culk.size(); ++i) { culk[i] ^= (0xA6 + i); }
+			this->pic = LoadSoundMemByMemImage(culk.data(), (int)culk.size());
+			for (size_t i = 0; i < culk.size(); ++i) { culk[i] = 0; }
+			culk.clear();
+		}
+	}
+	else {
+		this->pic = LoadGraph(path);
+	}
 	if (this->pic != DXLIB_PIC_NULL) {
 		this->path = path;
 	}
@@ -25,19 +53,14 @@ void dxcur_pic_c::LoadBase(const TCHAR *path) {
 }
 
 void dxcur_pic_c::LoadBase(const tstring &path) {
-	this->pic = LoadGraph(path.c_str());
-	if (this->pic != DXLIB_PIC_NULL) {
-		this->path = path;
-	}
-	else {
-		this->path.clear();
-	}
+	this->LoadBase(path.c_str());
 }
 
 void dxcur_pic_c::DeleteBase(void) {
 	if (this->IsValid()) {
 		DeleteGraph(this->pic);
 		this->pic = DXLIB_PIC_NULL;
+		this->path.clear();
 	}
 }
 
@@ -226,18 +249,57 @@ void dxcur_divpic_c::clear(void) {
 
 #if 1 /* dxcur_snd_c */
 
-dxcur_snd_c::dxcur_snd_c(const TCHAR *path) {
-	this->mat = LoadSoundMem(path);
+void dxcur_snd_c::LoadBase(const tstring &path) {
+	if (IsCulkFile(path)) {
+		std::vector<unsigned char> culk = ReadAllBytes(path);
+		if (!culk.empty()) {
+			for (size_t i = 0; i < culk.size(); ++i) { culk[i] ^= (0xA6 + i); }
+			this->mat = LoadSoundMemByMemImage(culk.data(), (int)culk.size());
+			for (size_t i = 0; i < culk.size(); ++i) { culk[i] = 0; }
+			culk.clear();
+		}
+	}
+	else {
+		this->mat = LoadSoundMem(path.c_str());
+	}
+	if (this->mat != DXLIB_SND_NULL) {
+		this->path = path;
+	}
+	else {
+		this->path.clear();
+	}
+}
+
+void dxcur_snd_c::DeleteBase(void) {
+	if (this->IsValid()) {
+		StopSoundMem(this->mat);
+		DeleteSoundMem(this->mat);
+		this->mat = DXLIB_SND_NULL;
+		this->path.clear();
+	}
 }
 
 dxcur_snd_c::dxcur_snd_c() {}
 
-dxcur_snd_c::~dxcur_snd_c() {
-	DeleteSoundMem(this->mat);
+dxcur_snd_c::dxcur_snd_c(const tstring &path) {
+	this->LoadBase(path);
 }
 
-void dxcur_snd_c::SetSound(const TCHAR *path) {
-	this->mat = LoadSoundMem(path);
+dxcur_snd_c::~dxcur_snd_c() {
+	if (this->IsValid()) { this->DeleteBase(); }
+}
+
+DxSnd_t dxcur_snd_c::handle(void) const {
+	return this->mat;
+}
+
+void dxcur_snd_c::reload(const tstring &path) {
+	this->DeleteBase();
+	this->LoadBase(path);
+}
+
+void dxcur_snd_c::SetSound(const tstring &path) {
+	this->reload(path);
 }
 
 void dxcur_snd_c::SetVolume(int val) {
@@ -252,14 +314,8 @@ void dxcur_snd_c::PlaySound(bool loop) {
 	}
 }
 
-DxSnd_t dxcur_snd_c::handle(void) const {
-	return this->mat;
-}
-
-void dxcur_snd_c::reload(const TCHAR *path) {
-	DeleteSoundMem(this->mat);
-	this->mat = DXLIB_SND_NULL;
-	this->mat = LoadSoundMem(path);
+bool dxcur_snd_c::IsValid(void) const {
+	return (this->handle() != DXLIB_SND_NULL);
 }
 
 #endif /* dxcur_snd_c */

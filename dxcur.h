@@ -89,16 +89,25 @@ class dxcur_snd_c {
 private:
 	DxTime_t Btime = 0; // 前回ならした時間
 	DxTime_t Gtime = 10; // 回避する時間
-	DxSnd_t mat = -1; // 音声ハンドル
+	DxSnd_t mat = DXLIB_SND_NULL; // 音声ハンドル
+	tstring path = _T("");
+
+private:
+	void LoadBase(const tstring &path);
+	void DeleteBase(void);
+
 public:
-	dxcur_snd_c(const TCHAR *path);
 	dxcur_snd_c();
+	dxcur_snd_c(const tstring &path);
 	~dxcur_snd_c();
-	void SetSound(const TCHAR *path);
+
+public:
+	DxSnd_t handle(void) const;
+	void reload(const tstring &path);
+	void SetSound(const tstring &path);
 	void SetVolume(int val);
 	void PlaySound(bool loop = false);
-	DxSnd_t handle(void) const;
-	void reload(const TCHAR *path);
+	bool IsValid(void) const;
 };
 
 /**
