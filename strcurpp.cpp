@@ -30,7 +30,7 @@
  * @param[in] p2 探す文字列
  * @return bool あったらtrue、なかったらfalse
  */
-bool strandspp(const std::string& p1, const std::string& p2) {
+bool strandspp(const tstring& p1, const tstring& p2) {
 	if (p2.size() > p1.size()) { return false; }
 	return (p1.compare(0, p2.size(), p2) == 0);
 }
@@ -42,9 +42,9 @@ bool strandspp(const std::string& p1, const std::string& p2) {
  * @return bool cがあったらtrue、なかったらfalse
  * @note '/'または':'を検索するstrcur.cppとは違い、cを指定する必要があります。
  */
-bool strnexpp(std::string& p1, char c) {
+bool strnexpp(tstring& p1, char c) {
 	size_t pos = p1.find(c);
-	if (pos == std::string::npos) { return false; }
+	if (pos == tstring::npos) { return false; }
 	p1.erase(0, pos + 1);
 	return true;
 }
@@ -55,7 +55,7 @@ bool strnexpp(std::string& p1, char c) {
  * @param[in] default_val 変換失敗時のデフォルト値
  * @return int 変換結果
  */
-int strsanpp(const std::string& p1, int default_val) {
+int strsanpp(const tstring& p1, int default_val) {
 	try {
 		return std::stoi(p1);
 	}
@@ -74,7 +74,7 @@ int strsanpp(const std::string& p1, int default_val) {
  * @param[in] default_val 変換失敗時のデフォルト値
  * @return double 変換結果
  */
-double strsanDpp(const std::string& p1, int under, double default_val) {
+double strsanDpp(const tstring& p1, int under, double default_val) {
 	if (under < 0) { under = 0; }
 	if (under > 15) { under = 15; }
 	try {

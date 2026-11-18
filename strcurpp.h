@@ -19,11 +19,15 @@
 #pragma once
 
 #include <string>
+#include <tchar.h>
 
-extern bool strandspp(const std::string& p1, const std::string& p2);
-extern bool strnexpp(std::string& p1, char c);
-extern int strsanpp(const std::string& p1, int default_val);
-extern double strsanDpp(const std::string& p1, int under, double default_val);
+/* std::string ‚Ì TCHAR ”Å */
+using tstring = std::basic_string<TCHAR, std::char_traits<TCHAR>, std::allocator<TCHAR>>;
+
+extern bool strandspp(const tstring& p1, const tstring& p2);
+extern bool strnexpp(tstring& p1, char c);
+extern int strsanpp(const tstring& p1, int default_val);
+extern double strsanDpp(const tstring& p1, int under, double default_val);
 
 /* strbox –¢ŽÀ‘• */
 

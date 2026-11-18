@@ -5,12 +5,10 @@
 #include <stack>
 #include <string>
 #include <vector>
+#include <strcurpp.h>
 
 /* TODO: 外から見えないようにしたい */
 #define MAX_CONTAIN_SIZE 1000000 /* 一度に読み書きするファイルの上限。バイト単位 */
-
-/* std::string の TCHAR 版 */
-using tstring = std::basic_string<TCHAR, std::char_traits<TCHAR>, std::allocator<TCHAR>>;
 
 extern bool fgetsForString(std::string &str, int n, FILE *stream, bool erase_line_break);
 extern void StringToCharArray(const std::string &src, char dest[], size_t size);
