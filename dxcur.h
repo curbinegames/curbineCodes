@@ -72,16 +72,17 @@ class dxcur_divpic_c {
 
 public:
 	dxcur_divpic_c(void);
-	dxcur_divpic_c(const TCHAR *path, int AllNum, int XNum, int YNum); /* XSizeとYSizeを自動計算する */
-	dxcur_divpic_c(const TCHAR *path, int AllNum, int XNum, int YNum, int XSize, int YSize);
+	dxcur_divpic_c(const tstring &path, int AllNum, int XNum, int YNum); /* XSizeとYSizeを自動計算する */
+	dxcur_divpic_c(const tstring &path, int AllNum, int XNum, int YNum, int XSize, int YSize);
 	dxcur_divpic_c(dxcur_divpic_c &&obj) noexcept;
 	dxcur_divpic_c& operator=(dxcur_divpic_c &&obj) noexcept;
 	~dxcur_divpic_c();
 
 	DxPic_t handle(size_t n) const;
-	void reload(const TCHAR *path, int AllNum, int XNum, int YNum); /* XSizeとYSizeを自動計算する */
-	void reload(const TCHAR *path, int AllNum, int XNum, int YNum, int XSize, int YSize);
+	void reload(const tstring &path, int AllNum, int XNum, int YNum); /* XSizeとYSizeを自動計算する */
+	void reload(const tstring &path, int AllNum, int XNum, int YNum, int XSize, int YSize);
 	void clear(void);
+	bool IsValid(void) const;
 };
 
 /* 同じ音声が2回以上同じタイミングでなることを防いだクラス */

@@ -138,7 +138,7 @@ bool dxcur_pic_c::IsValid(void) const {
 
 dxcur_divpic_c::dxcur_divpic_c(void) {}
 
-dxcur_divpic_c::dxcur_divpic_c(const TCHAR *path, int AllNum, int XNum, int YNum)
+dxcur_divpic_c::dxcur_divpic_c(const tstring &path, int AllNum, int XNum, int YNum)
 	: pic(AllNum)
 {
 	if (XNum <= 0) { return; }
@@ -147,7 +147,7 @@ dxcur_divpic_c::dxcur_divpic_c(const TCHAR *path, int AllNum, int XNum, int YNum
 
 	int XSize = 0;
 	int YSize = 0;
-	DxPic_t buf = LoadGraph(path);
+	DxPic_t buf = LoadGraph(path.c_str());
 	if (buf == DXLIB_PIC_NULL) { return; }
 
 	GetGraphSize(buf, &XSize, &YSize);
@@ -158,19 +158,19 @@ dxcur_divpic_c::dxcur_divpic_c(const TCHAR *path, int AllNum, int XNum, int YNum
 	{
 		DxPic_t *mem = (DxPic_t *)malloc(sizeof(DxPic_t) * AllNum);
 		if (mem == NULL) { return; }
-		LoadDivGraph(path, AllNum, XNum, YNum, XSize, YSize, mem);
+		LoadDivGraph(path.c_str(), AllNum, XNum, YNum, XSize, YSize, mem);
 		for (size_t i = 0; i < AllNum; i++) { this->pic[i] = mem[i]; }
 		free(mem);
 		this->usable = true;
 	}
 }
 
-dxcur_divpic_c::dxcur_divpic_c(const TCHAR *path, int AllNum, int XNum, int YNum, int XSize, int YSize)
+dxcur_divpic_c::dxcur_divpic_c(const tstring &path, int AllNum, int XNum, int YNum, int XSize, int YSize)
 	: pic(AllNum)
 {
 	DxPic_t *mem = (DxPic_t *)malloc(sizeof(DxPic_t) * AllNum);
 	if (mem == NULL) { return; }
-	LoadDivGraph(path, AllNum, XNum, YNum, XSize, YSize, mem);
+	LoadDivGraph(path.c_str(), AllNum, XNum, YNum, XSize, YSize, mem);
 	for (size_t i = 0; i < AllNum; i++) { this->pic[i] = mem[i]; }
 	free(mem);
 	this->usable = true;
@@ -207,14 +207,14 @@ DxPic_t dxcur_divpic_c::handle(size_t n) const {
 }
 
 /* reload1: ƒTƒCƒYŒvŽZ‚¾‚¯‚â‚Á‚ÄŒã‚Íreload2‚É”C‚¹‚é */
-void dxcur_divpic_c::reload(const TCHAR *path, int AllNum, int XNum, int YNum) {
+void dxcur_divpic_c::reload(const tstring &path, int AllNum, int XNum, int YNum) {
 	if (XNum <= 0) { return; }
 	if (YNum <= 0) { return; }
 	if (XNum * YNum < AllNum) { return; }
 
 	int XSize = 0;
 	int YSize = 0;
-	DxPic_t buf = LoadGraph(path);
+	DxPic_t buf = LoadGraph(path.c_str());
 	if (buf == DXLIB_PIC_NULL) { return; }
 
 	GetGraphSize(buf, &XSize, &YSize);
@@ -225,13 +225,13 @@ void dxcur_divpic_c::reload(const TCHAR *path, int AllNum, int XNum, int YNum) {
 }
 
 /* reload2 */
-void dxcur_divpic_c::reload(const TCHAR *path, int AllNum, int XNum, int YNum, int XSize, int YSize) {
+void dxcur_divpic_c::reload(const tstring &path, int AllNum, int XNum, int YNum, int XSize, int YSize) {
 	this->clear();
 	this->pic.resize(AllNum);
 
 	DxPic_t *mem = (DxPic_t *)malloc(sizeof(DxPic_t) * AllNum);
 	if (mem == NULL) { return; }
-	LoadDivGraph(path, AllNum, XNum, YNum, XSize, YSize, mem);
+	LoadDivGraph(path.c_str(), AllNum, XNum, YNum, XSize, YSize, mem);
 	for (size_t i = 0; i < AllNum; i++) { this->pic[i] = mem[i]; }
 	free(mem);
 	this->usable = true;
@@ -243,6 +243,11 @@ void dxcur_divpic_c::clear(void) {
 		this->pic[i] = DXLIB_PIC_NULL;
 	}
 	this->usable = false;
+}
+
+bool dxcur_divpic_c::IsValid(void) const {
+	if (this->pic.empty()) { return false; }
+	return (this->handle(0) != DXLIB_PIC_NULL);
 }
 
 #endif /* dxcur_divpic_c */
