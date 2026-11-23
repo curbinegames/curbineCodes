@@ -768,6 +768,64 @@ void dxcur_number_pic_c::SetPicGapAll(int val) { this->gapX = val; }
 
 #endif /* dxcur_number_pic_c */
 
+#pragma region dxcur_alphabet_pic_c
+
+/* xÀ•W‚ÍŸŽè‚Éi‚Þ‚Ì‚Å’ˆÓ */
+void dxcur_alphabet_pic_c::DrawCharOnce(int &x, int y, TCHAR c, double size) const {
+	if (!IS_BETWEEN(0x20, c, 0x7E)) { return; }
+    DrawExtendGraph(x, y, x + this->picsizeX * size, y + this->picsizeY * size,
+        this->pic.handle(c - 0x20), TRUE);
+    x += this->gapX[c - 0x20] * size;
+}
+
+uint dxcur_alphabet_pic_c::GetPicSize(const tstring &str, double size) const {
+	uint ret = 0;
+	for (size_t i = 0; i < str.size(); i++) {
+		TCHAR c = str[i];
+		if (!IS_BETWEEN(0x20, c, 0x7E)) { c = 0x20; }
+		ret += this->gapX[c - 0x20];
+	}
+    return (uint)(ret * size);
+}
+
+dxcur_alphabet_pic_c::dxcur_alphabet_pic_c(void) {}
+
+dxcur_alphabet_pic_c::dxcur_alphabet_pic_c(const tstring &path) {
+	this->SetPic(path);
+}
+
+void dxcur_alphabet_pic_c::DrawString(int x, int y, double size, const tstring &s) const {
+    for (size_t i = 0; i < s.size(); i++) {
+        this->DrawCharOnce(x, y, s[i], size);
+    }
+}
+
+void dxcur_alphabet_pic_c::DrawStringRight(int right, int up, double size, const tstring &s) const {
+    int DrawX = right - this->GetPicSize(s, size);
+    this->DrawString(DrawX, up, size, s);
+}
+
+void dxcur_alphabet_pic_c::SetPic(const tstring &path) {
+	this->pic.reload(path.c_str(), 0x60, 0x10, 6);
+	GetGraphSize(this->pic.handle(0), &this->picsizeX, &this->picsizeY);
+	for (size_t i = 1; i < 0x5E + 1; i++) {
+		this->gapX[i] = this->picsizeX;
+	}
+}
+
+void dxcur_alphabet_pic_c::SetPicSizeAll(int val) {
+	for (size_t i = 0; i < 0x5E + 1; i++) {
+		this->gapX[i] = val;
+	}
+}
+
+void dxcur_alphabet_pic_c::SetPicSize(int val, int index) {
+	if (index < 0 || 0x5E < index) { return; }
+	this->gapX[index] = val;
+}
+
+#pragma endregion dxcur_alphabet_pic_c
+
 #if 1 /* dxcur_window_pic_c */
 
 dxcur_window_pic_c::dxcur_window_pic_c(const tstring &path) {

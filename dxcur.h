@@ -271,6 +271,28 @@ public:
 	void SetPicGapAll(int val);
 };
 
+class dxcur_alphabet_pic_c {
+private:
+	dxcur_divpic_c pic;
+	int picsizeX = 0;
+	int picsizeY = 0;
+	int gapX[0x60] = {};
+
+	void DrawCharOnce(int &x, int y, TCHAR c, double size) const;
+	uint GetPicSize(const tstring &c, double size) const;
+
+public:
+	dxcur_alphabet_pic_c(void);
+	dxcur_alphabet_pic_c(const tstring &path);
+
+	void DrawString(int x, int y, double size, const tstring &s) const;
+	void DrawStringRight(int right, int up, double size, const tstring &s) const;
+
+	void SetPic(const tstring &path);
+	void SetPicSizeAll(int val);
+	void SetPicSize(int val, int index);
+};
+
 /**
  * @brief ウィンドウの枠を描画するクラス。
  */
